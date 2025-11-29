@@ -48,6 +48,127 @@
             color: #f59e0b;
             font-weight: 600;
         }
+
+        /* PRINT / PDF STYLES */
+        @media print {
+            @page {
+                margin: 0.5cm;
+                size: A4;
+            }
+            
+            body {
+                background-color: #ffffff !important;
+                color: #1f2937 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                font-size: 12px; /* Slightly smaller font to fit content better */
+            }
+
+            /* Hide interactive elements and footer */
+            nav, 
+            button:not(.hidden), 
+            .no-print,
+            #project-filters,
+            footer {
+                display: none !important;
+            }
+
+            /* Show all content sections */
+            section {
+                display: block !important;
+                page-break-inside: auto !important; /* Allow sections to break across pages */
+                margin-bottom: 1rem !important;
+                opacity: 1 !important;
+                animation: none !important;
+            }
+
+            /* Experience Timeline: Expand all details */
+            [id^="job-details-"] {
+                display: block !important;
+            }
+            [id^="job-hint-"] {
+                display: none !important;
+            }
+            
+            /* Layout Adjustments for Density */
+            .max-w-7xl {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            /* Force grids to stack to utilize full width and avoid gap issues */
+            .grid {
+                display: block !important;
+            }
+            
+            .grid > * {
+                margin-bottom: 1rem;
+            }
+            
+            /* Header Compact */
+            header {
+                margin-bottom: 1rem !important;
+                padding: 1rem !important;
+                border: 1px solid #e5e7eb !important;
+            }
+            
+            /* Cards and Containers */
+            .bg-gray-800, .bg-gray-700, .bg-gray-900 {
+                background-color: #ffffff !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: none !important;
+                color: #1f2937 !important;
+                break-inside: avoid; /* Prevent individual cards from splitting */
+                page-break-inside: avoid;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            /* Specific handling for timeline items to prevent splitting */
+            #timeline-container > div {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                margin-bottom: 1rem;
+            }
+
+            /* Chart adjustments */
+            .chart-container {
+                page-break-inside: avoid;
+                height: 250px !important; /* Reduce height to save space */
+                margin-bottom: 1rem;
+            }
+            
+            /* Typography High Contrast */
+            p, h1, h2, h3, li, span, div, strong {
+                color: #1f2937 !important;
+            }
+            .text-amber-500, .text-amber-300 {
+                color: #d97706 !important;
+            }
+            .text-gray-400, .text-gray-500, .text-gray-300 {
+                color: #4b5563 !important;
+            }
+            .text-white {
+                color: #111827 !important;
+            }
+            
+            /* Badges */
+            .bg-amber-800\/50 {
+                background-color: #fef3c7 !important;
+                color: #92400e !important;
+                border: 1px solid #fcd34d;
+            }
+            .bg-sky-800\/50 {
+                background-color: #e0f2fe !important;
+                color: #075985 !important;
+                border: 1px solid #7dd3fc;
+            }
+            
+            /* Typography sizing for print */
+            h1 { font-size: 1.5rem !important; }
+            h2 { font-size: 1.25rem !important; margin-bottom: 0.5rem !important; }
+            p { margin-bottom: 0.5rem !important; line-height: 1.4; }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans antialiased selection:bg-amber-900/50 selection:text-amber-300">
@@ -57,7 +178,7 @@
      Accents: Amber-500 (#f59e0b) for highlights and calls to action.
      Cards: Gray-800 (#1f2937) for visual separation from the background. --><!-- Main Layout Container --><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- Header Section --><header class="bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-700">
+    <!-- Header Section --><header class="bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-700 relative group">
     <div class="flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="text-center md:text-left">
             <h1 class="text-4xl font-bold text-white tracking-tight">Handsome Mofokeng</h1>
@@ -69,7 +190,7 @@
                 <a href="https://www.linkedin.com/in/handsome-mofokeng" target="_blank" class="text-amber-500 hover:text-amber-400 font-semibold underline decoration-2 underline-offset-2">LinkedIn Profile</a>
             </div>
         </div>
-        <!-- Quick quantitative summary --><div class="grid grid-cols-3 gap-4 text-center">
+        <!-- Quick quantitative summary --><div class="grid grid-cols-3 gap-4 text-center mt-8 md:mt-0">
         <div class="bg-gray-700 p-4 rounded-xl border border-gray-600">
             <div class="text-3xl font-bold text-white">5+</div>
             <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Years Exp</div>
@@ -86,7 +207,17 @@
     </div>
 </header>
 
-    <!-- Navigation / Tabs --><nav class="flex flex-wrap gap-6 border-b border-gray-700 mb-8 sticky top-0 bg-gray-900/95 backdrop-blur z-10 py-2">
+    <!-- Download Button (Below Header) -->
+    <div class="flex justify-end mb-8 no-print">
+        <a href="https://github.com/handsomemofokeng/profile/actions/workflows/build_pdf.yml" target="_blank" class="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Download PDF</span>
+        </a>
+    </div>
+
+    <!-- Navigation / Tabs --><nav class="flex flex-wrap gap-6 border-b border-gray-700 mb-8 sticky top-0 bg-gray-900/95 backdrop-blur z-10 py-2 no-print">
     <button onclick="switchTab('dashboard')" id="tab-dashboard" class="pb-2 text-gray-300 hover:text-white font-medium transition-colors active-tab">Dashboard Analysis</button>
     <button onclick="switchTab('experience')" id="tab-experience" class="pb-2 text-gray-300 hover:text-white font-medium transition-colors">Experience Timeline</button>
     <button onclick="switchTab('projects')" id="tab-projects" class="pb-2 text-gray-300 hover:text-white font-medium transition-colors">Project Matrix</button>
@@ -194,7 +325,7 @@
             </div>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 sticky top-24">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 sticky top-24 no-print">
             <h3 class="text-lg font-bold text-white mb-4">Filter Projects</h3>
             <div class="space-y-2" id="project-filters">
                 <button onclick="filterProjects('all')" class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium bg-amber-500 text-gray-900 transition-all hover:opacity-90 filter-btn" data-filter="all">
