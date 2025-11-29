@@ -209,12 +209,12 @@
 
     <!-- Download Button (Below Header) -->
     <div class="flex justify-end mb-8 no-print">
-        <a href="https://github.com/handsomemofokeng/profile/actions/workflows/build_pdf.yml" target="_blank" class="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-md">
+        <button onclick="window.print()" class="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
             <span>Download PDF</span>
-        </a>
+        </button>
     </div>
 
     <!-- Navigation / Tabs --><nav class="flex flex-wrap gap-6 border-b border-gray-700 mb-8 sticky top-0 bg-gray-900/95 backdrop-blur z-10 py-2 no-print">
@@ -532,6 +532,8 @@
                 categoryClasses = 'bg-amber-800/50 text-amber-300';
             } else if (p.category === 'Flutter') {
                 categoryClasses = 'bg-sky-800/50 text-sky-300'; // New color for Flutter
+            } else if (p.category === 'Java') {
+                categoryClasses = 'bg-orange-700 text-white'; // Bright color for Java
             }
 
             return `
@@ -639,7 +641,7 @@
                     data: [2, 1, 1], // Updated data count: 2 Kotlin, 1 Java, 1 Flutter
                     backgroundColor: [
                         'rgb(245, 158, 11)', // Amber-500 for Kotlin (Gold)
-                        '#4b5563',           // Gray-600 for Java (Dark Grey)
+                        '#c2410c',           // Orange-700 for Java (Bright Orange)
                         '#0ea5e9'            // Sky-500 for Flutter (Blue)
                     ],
                     borderWidth: 0
