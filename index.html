@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handsome Mofokeng | Interactive Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Chart Container Styles as per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar for webkit (Dark Theme) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* Gray-800 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d97706; /* Amber-700 for scrollbar thumb */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b; /* Amber-500 */
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #f59e0b; /* Amber-500 */
+            color: #f59e0b;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans antialiased selection:bg-amber-900/50 selection:text-amber-300">
+
+<!-- Chosen Palette: Black (Gray-900) and Gold (Amber-500).
+     Background: Gray-900 (#111827). Text: Gray-100/White.
+     Accents: Amber-500 (#f59e0b) for highlights and calls to action.
+     Cards: Gray-800 (#1f2937) for visual separation from the background. --><!-- Main Layout Container --><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header Section --><header class="bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-700">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="text-center md:text-left">
+            <h1 class="text-4xl font-bold text-white tracking-tight">Handsome Mofokeng</h1>
+            <p class="text-xl text-amber-500 font-medium mt-1">Mobile Developer (Kotlin & Jetpack Compose Specialist)</p>
+            <div class="flex flex-wrap gap-3 mt-4 justify-center md:justify-start text-sm text-gray-400">
+                <span class="flex items-center gap-1">📍 Johannesburg, Gauteng</span>
+                <span class="flex items-center gap-1">📱 0632881025</span>
+                <span class="flex items-center gap-1">📧 handsomem23@hotmail.com</span>
+                <a href="https://www.linkedin.com/in/handsome-mofokeng" target="_blank" class="text-amber-500 hover:text-amber-400 font-semibold underline decoration-2 underline-offset-2">LinkedIn Profile</a>
+            </div>
+        </div>
+        <!-- Quick quantitative summary --><div class="grid grid-cols-3 gap-4 text-center">
+        <div class="bg-gray-700 p-4 rounded-xl border border-gray-600">
+            <div class="text-3xl font-bold text-white">5+</div>
+            <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Years Exp</div>
+        </div>
+        <div class="bg-gray-700 p-4 rounded-xl border border-gray-600">
+            <div class="text-3xl font-bold text-white">4</div>
+            <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Key Projects</div>
+        </div>
+        <div class="bg-gray-700 p-4 rounded-xl border border-gray-600">
+            <div class="text-3xl font-bold text-white">100%</div>
+            <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Mobile Focus</div>
+        </div>
+    </div>
+    </div>
+</header>
+
+    <!-- Navigation / Tabs --><nav class="flex flex-wrap gap-6 border-b border-gray-700 mb-8 sticky top-0 bg-gray-900/95 backdrop-blur z-10 py-2">
+    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="pb-2 text-gray-300 hover:text-white font-medium transition-colors active-tab">Dashboard Analysis</button>
+    <button onclick="switchTab('experience')" id="tab-experience" class="pb-2 text-gray-300 hover:text-white font-medium transition-colors">Experience Timeline</button>
+    <button onclick="switchTab('projects')" id="tab-projects" class="pb-2 text-gray-300 hover:text-white font-medium transition-colors">Project Matrix</button>
+</nav>
+
+    <!-- DASHBOARD TAB --><section id="view-dashboard" class="space-y-8 animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        <!-- Profile Summary Block --><div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+        <h2 class="text-2xl font-bold text-white mb-4">Professional Profile</h2>
+        <p class="text-gray-300 leading-relaxed mb-4">
+            I am a dedicated <strong class="text-amber-500">Mobile Development specialist</strong>, with expertise anchored in
+            <strong class="text-amber-500">Native Android</strong>, Kotlin, and the modern Jetpack Compose framework. This dashboard
+            provides a transparent, data-driven view of my technical skills and project focus.
+        </p>
+        <p class="text-gray-300 leading-relaxed">
+            My core focus is delivering high-quality, high-performance mobile applications. I manage the full Software Development Lifecycle
+            (SDLC), employing robust practices like MVVM architecture and Test-Driven Development (TDD) to ensure stability from conceptualization to Play Store deployment.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-3 py-1 bg-amber-800/50 text-amber-300 rounded-full text-sm font-medium">Kotlin Specialist</span>
+            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">Jetpack Compose</span>
+            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">Test Driven Development</span>
+            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">CI/CD & DevOps</span>
+        </div>
+    </div>
+
+        <!-- Competency Radar Chart --><div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+        <h2 class="text-2xl font-bold text-white mb-2">Competency Radar</h2>
+        <p class="text-sm text-gray-400 mb-4">Visualizing proficiency across key development pillars.</p>
+        <div class="chart-container">
+            <canvas id="skillsRadar"></canvas>
+        </div>
+    </div>
+    </div>
+
+    <!-- Technical Skills Table (Interactive) --><div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-white">Technical Arsenal</h2>
+        <p class="text-sm text-gray-400 hidden md:block">Hover over categories for details</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 --><div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
+        <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">Android Core</h3>
+        <ul class="text-sm text-gray-300 space-y-1">
+            <li>➤ Kotlin (Primary)</li>
+            <li>➤ Jetpack Compose</li>
+            <li>➤ Android SDK & Native</li>
+            <li>➤ AAC & MVVM</li>
+        </ul>
+    </div>
+        <!-- Card 2 --><div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
+        <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">Quality & DevOps</h3>
+        <ul class="text-sm text-gray-300 space-y-1">
+            <li>➤ Unit Testing & TDD</li>
+            <li>➤ Gitlab CI/CD</li>
+            <li>➤ Google Play Console</li>
+            <li>➤ Debugging & Standards</li>
+        </ul>
+    </div>
+        <!-- Card 3 --><div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
+        <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">Languages</h3>
+        <ul class="text-sm text-gray-300 space-y-1">
+            <li>➤ Kotlin & Java</li>
+            <li>➤ Dart (Flutter)</li>
+            <li>➤ Swift (Exposure)</li>
+            <li>➤ XML</li>
+        </ul>
+    </div>
+        <!-- Card 4 --><div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
+        <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">Methodology</h3>
+        <ul class="text-sm text-gray-300 space-y-1">
+            <li>➤ Agile & Scrum</li>
+            <li>➤ SDLC Management</li>
+            <li>➤ Technical Specs</li>
+            <li>➤ Jira Workflows</li>
+        </ul>
+    </div>
+    </div>
+</div>
+</section>
+
+    <!-- EXPERIENCE TAB --><section id="view-experience" class="hidden space-y-8 animate-fade-in">
+    <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+        <h2 class="text-2xl font-bold text-white mb-4">Career Timeline</h2>
+        <p class="text-gray-300 mb-8 max-w-3xl">
+            A chronological view of my professional journey. Click on any role to expand and view detailed responsibilities and key achievements.
+            This timeline demonstrates a consistent trajectory of increasing responsibility and technical complexity.
+        </p>
+
+        <div class="relative pl-8 border-l-2 border-gray-700 space-y-10" id="timeline-container">
+            <!-- Timeline items injected via JS --></div>
+    </div>
+</section>
+
+    <!-- PROJECTS TAB --><section id="view-projects" class="hidden space-y-8 animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Projects Controls & Viz --><div class="lg:col-span-1 space-y-6">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+            <h3 class="text-lg font-bold text-white mb-4">Tech Stack Analysis</h3>
+            <p class="text-xs text-gray-400 mb-2">Breakdown of primary technologies used across key projects.</p>
+            <div class="chart-container" style="height: 250px;">
+                <canvas id="projectDoughnut"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 sticky top-24">
+            <h3 class="text-lg font-bold text-white mb-4">Filter Projects</h3>
+            <div class="space-y-2" id="project-filters">
+                <button onclick="filterProjects('all')" class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium bg-amber-500 text-gray-900 transition-all hover:opacity-90 filter-btn" data-filter="all">
+                    Show All
+                </button>
+                <button onclick="filterProjects('Kotlin')" class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium bg-gray-700 text-gray-100 hover:bg-gray-600 transition-all filter-btn" data-filter="Kotlin">
+                    Kotlin & Compose
+                </button>
+                <button onclick="filterProjects('Java')" class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium bg-gray-700 text-gray-100 hover:bg-gray-600 transition-all filter-btn" data-filter="Java">
+                    Java Native
+                </button>
+            </div>
+        </div>
+    </div>
+
+        <!-- Projects Grid --><div class="lg:col-span-2">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Key Projects Showcase</h2>
+                <span id="project-count" class="text-sm font-medium text-gray-400 bg-gray-700 px-3 py-1 rounded-full">4 Items</span>
+            </div>
+            <div class="grid grid-cols-1 gap-6" id="projects-grid">
+                <!-- Projects Injected via JS --></div>
+        </div>
+    </div>
+    </div>
+</section>
+
+    <!-- Education Footer --><section class="mt-12 pt-8 border-t border-gray-700">
+    <h2 class="text-2xl font-bold text-white mb-6">Education History</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
+            <div class="text-amber-500 text-2xl mb-2">🎓</div>
+            <h3 class="font-bold text-white">N. Diploma IT</h3>
+            <p class="text-sm text-gray-300">Software Development</p>
+            <p class="text-xs text-gray-500 mt-2">Central University of Technology | 2015-2018</p>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
+            <div class="text-amber-500 text-2xl mb-2">🎓</div>
+            <h3 class="font-bold text-white">BSc IT</h3>
+            <p class="text-sm text-gray-300">Bridging Program</p>
+            <p class="text-xs text-gray-500 mt-2">University of Free State | 2013-2014</p>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
+            <div class="text-amber-500 text-2xl mb-2">🏫</div>
+            <h3 class="font-bold text-white">National Senior Certificate</h3>
+            <p class="text-sm text-gray-300">Matric</p>
+            <p class="text-xs text-gray-500 mt-2">Mampoi High School | 2009-2011</p>
+        </div>
+    </div>
+</section>
+
+    <footer class="mt-12 text-center text-gray-500 text-sm pb-8">
+        <p>&copy; 2024 Handsome Mofokeng Portfolio Interactive View</p>
+    </footer>
+
+</div>
+
+<!-- JAVASCRIPT LOGIC --><script>
+    // --- DATA STORE ---
+    const experienceData = [
+        {
+            role: "Mobile Developer",
+            company: "Standard Bank",
+            dept: "Finance",
+            period: "2022/08 - Present",
+            active: true,
+            responsibilities: [
+                "Develop, test, and deploy enterprise-level mobile applications using Kotlin.",
+                "Design modern UI/UX using Jetpack Compose for enhanced user engagement.",
+                "Implement rigorous Unit Testing and professional coding standards.",
+                "Manage CI/CD pipelines via Gitlab for frequent internal and production releases.",
+                "Proactively communicate workload and timelines to business stakeholders."
+            ]
+        },
+        {
+            role: "Mobile Developer",
+            company: "Acumen Software",
+            dept: "IT & Telecommunications",
+            period: "2021/06 - 2022/07",
+            active: false,
+            responsibilities: [
+                "Enhanced existing applications and developed new customer-facing apps.",
+                "Analyzed requirements and created technical specifications.",
+                "Provided technical guidance to team members and mentored juniors.",
+                "Monitored and corrected software defects in production environments."
+            ]
+        },
+        {
+            role: "Developer",
+            company: "Dimension Data",
+            dept: "IT & Telecommunications",
+            period: "2019/02 - 2021/05",
+            active: false,
+            responsibilities: [
+                "Focused on software development, analysis, and modification.",
+                "Provided technical mentorship and ensured code quality.",
+                "Assisted with SharePoint Administration and server health automation.",
+                "Gained experience in Managed Services and IT Support."
+            ]
+        }
+    ];
+
+    const projectData = [
+        {
+            name: "ComposeWhatsApp",
+            stack: ["Kotlin", "Android Native", "Jetpack Compose"],
+            link: "https://github.com/handsomemofokeng/ComposeWhatsApp?tab=readme-ov-file#whatsapp-ui-clone-jetpack-compose",
+            linkText: "Source Code",
+            desc: "A clone of the WhatsApp UI built entirely with Jetpack Compose, demonstrating advanced UI capabilities and modern Android architecture.",
+            category: "Kotlin"
+        },
+        {
+            name: "Standard Bank App",
+            stack: ["Kotlin", "Android Native"],
+            link: "#",
+            linkText: "App Link: com.sbg.mobile.phone",
+            desc: "Enterprise financial application. Contributed to core banking features, UI modernization, and stability improvements.",
+            category: "Kotlin"
+        },
+        {
+            name: "MySmart.City App",
+            stack: ["Java Native", "Android"],
+            link: "https://play.google.com/store/apps/details?id=net.acumensoft.mysmartcityapp",
+            linkText: "App Store Link",
+            desc: "A citizen engagement platform allowing users to report issues and interact with city services.",
+            category: "Java"
+        },
+        {
+            name: "SRC Voting App",
+            stack: ["Java Native", "Android"],
+            link: "https://github.com/handsomemofokeng/SRCVotingApp",
+            linkText: "Source Code",
+            desc: "A secure voting application designed for Student Representative Council elections.",
+            category: "Java"
+        }
+    ];
+
+    // --- RENDER FUNCTIONS ---
+
+    function renderTimeline() {
+        const container = document.getElementById('timeline-container');
+        container.innerHTML = experienceData.map((job, index) => `
+            <div class="relative group cursor-pointer" onclick="toggleJob(${index})">
+                <div class="absolute -left-[41px] h-5 w-5 rounded-full border-4 border-gray-900 ${index === 0 ? 'bg-amber-500' : 'bg-gray-500'} shadow-md"></div>
+                <div class="bg-gray-800 hover:bg-gray-700 p-5 rounded-xl border border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-amber-500/50">
+                    <div class="flex justify-between items-start flex-wrap gap-2">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">${job.role}</h3>
+                            <div class="text-amber-500 font-medium">${job.company} <span class="text-gray-500 text-sm font-normal">| ${job.dept}</span></div>
+                        </div>
+                        <span class="text-xs font-semibold px-2 py-1 rounded bg-gray-700 text-gray-300">${job.period}</span>
+                    </div>
+                    <div id="job-details-${index}" class="${index === 0 ? 'block' : 'hidden'} mt-4 pt-4 border-t border-gray-700">
+                        <ul class="list-none space-y-2">
+                            ${job.responsibilities.map(r => `
+                                <li class="flex items-start text-sm text-gray-300">
+                                    <span class="text-amber-500 mr-2 mt-1">➤</span>
+                                    <span>${r}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div class="mt-2 text-center">
+                        <span class="text-xs text-gray-500 group-hover:text-amber-500 transition-colors" id="job-hint-${index}">
+                            ${index === 0 ? 'Click to collapse' : 'Click to expand details'}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function toggleJob(index) {
+        const details = document.getElementById(`job-details-${index}`);
+        const hint = document.getElementById(`job-hint-${index}`);
+        if (details.classList.contains('hidden')) {
+            details.classList.remove('hidden');
+            details.classList.add('block');
+            hint.textContent = 'Click to collapse';
+        } else {
+            details.classList.add('hidden');
+            details.classList.remove('block');
+            hint.textContent = 'Click to expand details';
+        }
+    }
+
+    function renderProjects(filter = 'all') {
+        const container = document.getElementById('projects-grid');
+        const countLabel = document.getElementById('project-count');
+
+        const filtered = filter === 'all'
+            ? projectData
+            : projectData.filter(p => p.category.includes(filter));
+
+        countLabel.textContent = `${filtered.length} Items`;
+
+        container.innerHTML = filtered.map(p => `
+            <div class="group bg-gray-700 rounded-xl border border-gray-700 p-5 hover:shadow-xl hover:border-amber-500 transition-all">
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-bold text-lg text-white">${p.name}</h3>
+                    <span class="text-xs font-mono px-2 py-1 rounded ${p.category === 'Kotlin' ? 'bg-amber-800/50 text-amber-300' : 'bg-gray-600 text-gray-200'}">${p.category}</span>
+                </div>
+                <p class="text-sm text-gray-300 mb-4 h-12 overflow-hidden">${p.desc}</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    ${p.stack.map(s => `<span class="text-xs bg-gray-800 border border-gray-600 text-gray-400 px-2 py-1 rounded">${s}</span>`).join('')}
+                </div>
+                <a href="${p.link}" target="_blank" class="inline-flex items-center text-sm font-medium text-amber-500 hover:text-amber-400">
+                    ${p.linkText} <span class="ml-1">→</span>
+                </a>
+            </div>
+        `).join('');
+    }
+
+    // --- NAVIGATION LOGIC ---
+    function switchTab(tabName) {
+        // Hide all views
+        ['dashboard', 'experience', 'projects'].forEach(t => {
+            document.getElementById(`view-${t}`).classList.add('hidden');
+            document.getElementById(`tab-${t}`).classList.remove('active-tab', 'text-white');
+            document.getElementById(`tab-${t}`).classList.add('text-gray-300');
+        });
+
+        // Show selected
+        document.getElementById(`view-${tabName}`).classList.remove('hidden');
+        const activeBtn = document.getElementById(`tab-${tabName}`);
+        activeBtn.classList.add('active-tab', 'text-white');
+        activeBtn.classList.remove('text-gray-300');
+
+        // Trigger window resize to fix Chart.js responsive sizing if invisible on load
+        window.dispatchEvent(new Event('resize'));
+    }
+
+    function filterProjects(category) {
+        renderProjects(category);
+        // Update button styles
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            if(btn.dataset.filter === category) {
+                btn.classList.remove('bg-gray-700', 'text-gray-100');
+                btn.classList.add('bg-amber-500', 'text-gray-900');
+            } else {
+                btn.classList.add('bg-gray-700', 'text-gray-100');
+                btn.classList.remove('bg-amber-500', 'text-gray-900');
+            }
+        });
+    }
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+        renderTimeline();
+        renderProjects();
+
+        // 1. RADAR CHART: Competency
+        const ctxRadar = document.getElementById('skillsRadar').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Android Native', 'Kotlin/Compose', 'Kotlin Multiplatform', 'Flutter/Dart'],
+                datasets: [{
+                    label: 'Skill Proficiency Level',
+                    data: [95, 95, 80, 75],
+                    fill: true,
+                    backgroundColor: 'rgba(245, 158, 11, 0.2)', // Amber-500 low opacity
+                    borderColor: 'rgb(245, 158, 11)', // Amber-500
+                    pointBackgroundColor: 'rgb(245, 158, 11)', // Amber-500
+                    pointBorderColor: '#1f2937', // Gray-800
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(245, 158, 11)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                elements: { line: { tension: 0.3 } },
+                scales: {
+                    r: {
+                        angleLines: { color: '#374151' }, // Gray-700
+                        grid: { color: '#374151' }, // Gray-700
+                        pointLabels: {
+                            font: { size: 12, family: 'sans-serif' },
+                            color: '#d1d5db' // Gray-300
+                        },
+                        ticks: { display: false, max: 100 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 2. DOUGHNUT CHART: Project Stack
+        const ctxDoughnut = document.getElementById('projectDoughnut').getContext('2d');
+        new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Kotlin / Compose', 'Java Native'],
+                datasets: [{
+                    data: [2, 2], // Based on the 4 key projects
+                    backgroundColor: [
+                        'rgb(245, 158, 11)', // Amber-500 for Modern (Gold)
+                        '#4b5563'           // Gray-600 for Legacy (Dark Grey)
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#d1d5db' // Gray-300
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.label}: ${context.raw} Projects`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Set initial tab state after charts are initialized
+        switchTab('dashboard');
+    });
+</script>
+</body>
+</html>
