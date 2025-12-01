@@ -303,45 +303,32 @@
 
     <!-- DASHBOARD TAB -->
     <section id="view-dashboard" class="space-y-8 animate-fade-in">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-            <!-- Profile Summary Block -->
-            <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-                <h2 class="text-2xl font-bold text-white mb-4">Professional Profile</h2>
-                <p class="text-gray-300 leading-relaxed mb-4">
-                    I am a responsible <strong class="text-amber-500">Mobile Development
-                    specialist</strong>, determined to succeed by being persistent and committed to
-                    achieving personal and career goals. I am highly collaborative and thrive in
-                    organized, challenging environments.
-                </p>
-                <p class="text-gray-300 leading-relaxed">
-                    Coding is my true passion; every day presents new challenges, and I relish
-                    applying logic to solve them. I manage the full Software Development Lifecycle
-                    (SDLC) using <strong class="text-amber-500">Kotlin, Jetpack Compose</strong>,
-                    and robust <strong class="text-amber-500">MVVM/TDD</strong> practices, ensuring
-                    high-quality, high-performance mobile applications from conceptualization to
-                    deployment.
-                </p>
-                <div class="mt-6 flex flex-wrap gap-2">
-                    <span class="px-3 py-1 bg-amber-800/50 text-amber-300 rounded-full text-sm font-medium">Kotlin Specialist</span>
-                    <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">Jetpack Compose</span>
-                    <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">Test Driven Development</span>
-                    <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">C# / Backend Exposure</span>
-                </div>
-            </div>
-
-            <!-- Competency Radar Chart -->
-            <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-                <h2 class="text-2xl font-bold text-white mb-2">Competency Radar</h2>
-                <p class="text-sm text-gray-400 mb-4">Visualizing proficiency across key development
-                    pillars.</p>
-                <div class="chart-container">
-                    <canvas id="skillsRadar"></canvas>
-                </div>
+        <!-- 1. Professional Profile Block -->
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+            <h2 class="text-2xl font-bold text-white mb-4">Professional Profile</h2>
+            <p class="text-gray-300 leading-relaxed mb-4">
+                I am a responsible <strong class="text-amber-500">Mobile Development
+                specialist</strong>, determined to succeed by being persistent and committed to
+                achieving personal and career goals. I am highly collaborative and thrive in
+                organized, challenging environments.
+            </p>
+            <p class="text-gray-300 leading-relaxed">
+                Coding is my true passion; every day presents new challenges, and I relish applying
+                logic to solve them. I manage the full Software Development Lifecycle (SDLC) using
+                <strong class="text-amber-500">Kotlin, Jetpack Compose</strong>, and robust <strong
+                    class="text-amber-500">MVVM/TDD</strong> practices, ensuring high-quality,
+                high-performance mobile applications from conceptualization to deployment.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-2">
+                <span class="px-3 py-1 bg-amber-800/50 text-amber-300 rounded-full text-sm font-medium">Kotlin Specialist</span>
+                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">Jetpack Compose</span>
+                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">Test Driven Development</span>
+                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">C# / Backend Exposure</span>
             </div>
         </div>
 
-        <!-- Technical Skills Table (Interactive) -->
+        <!-- 2. Technical Skills Table (Interactive) -->
         <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-white">Technical Arsenal</h2>
@@ -392,6 +379,79 @@
                         <li>➤ Technical Solutions Design</li>
                         <li>➤ Problem-solving</li>
                         <li>➤ Fail Fast & Learn Fast</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Psychometric Competency Radar Chart -->
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+            <h2 class="text-2xl font-bold text-white mb-2">Psychometric Competency Profile</h2>
+            <p class="text-sm text-gray-400 mb-4">Based on Snaphunt assessment data.</p>
+            <div class="chart-container">
+                <canvas id="psychometricRadar"></canvas>
+            </div>
+        </div>
+
+        <!-- 4. Qualitative Behavioral Traits -->
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+            <h2 class="text-2xl font-bold text-white mb-6">Qualitative Behavioral Traits</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <!-- Thinking: Analysing | Exploring (Innovative) -->
+                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
+                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500 flex items-center gap-2">
+                        <span class="text-amber-500">💡</span> Innovative Thinker
+                    </h3>
+                    <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
+                        <li>Curious and explores new ideas and approaches (Exploring).</li>
+                        <li>Thinks out of the box and considers a wide range of alternatives.</li>
+                        <li>Comfortable dealing with numerical data to support hypotheses
+                            (Analysing).
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Executing: Quality | Result Driven (Achiever) -->
+                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
+                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500 flex items-center gap-2">
+                        <span class="text-amber-500">🎯</span> Driven Achiever
+                    </h3>
+                    <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
+                        <li>Systematic, methodical, and disciplined in delivery (Quality).</li>
+                        <li>Reliable and driven to achieve goals within deadlines (Result Driven).
+                        </li>
+                        <li>Pays attention to details, ensuring a high standard of work.</li>
+                    </ul>
+                </div>
+
+                <!-- Progressing: Resilience | Adaptability (Tenacious) -->
+                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
+                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500 flex items-center gap-2">
+                        <span class="text-amber-500">🛡️</span> Resilient & Adaptable
+                    </h3>
+                    <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
+                        <li>Recovers quickly from setbacks; views failures as learning opportunities
+                            (Resilience).
+                        </li>
+                        <li>Good team player, paying attention to everyone's input.</li>
+                        <li><em class="text-gray-400">Prefers stable environments and may be
+                            uncomfortable with unplanned changes.</em></li>
+                    </ul>
+                </div>
+
+                <!-- Connecting: Networking | Collaborating -->
+                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
+                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500 flex items-center gap-2">
+                        <span class="text-amber-500">🤝</span> Collaborator
+                    </h3>
+                    <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
+                        <li>Displays empathy towards colleagues and finds it important to listen to
+                            their points of view (Collaborating).
+                        </li>
+                        <li>Delegates easily and gives credit where it is due.</li>
+                        <li><em class="text-gray-400">Prefers to work independently over leading
+                            teams.</em></li>
                     </ul>
                 </div>
             </div>
@@ -586,6 +646,13 @@
         }
     ];
 
+    // --- PSYCHOMETRIC DATA ---
+    const psychometricData = {
+        labels: ["Analysing", "Exploring", "Networking", "Collaborating", "Quality", "Results Driven", "Leadership", "Resilience", "Adaptability"],
+        // Data points (0-100 scale, estimated from radar chart shape)
+        data: [70, 75, 40, 60, 95, 90, 20, 95, 45]
+    };
+
     // --- RENDER FUNCTIONS ---
 
     function renderTimeline() {
@@ -644,6 +711,12 @@
             : projectData.filter(p => p.category.includes(filter));
 
         countLabel.textContent = `${filtered.length} Items`;
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterProjects(btn.dataset.filter);
+            });
+        });
 
         container.innerHTML = filtered.map(p => {
             let categoryClasses = 'bg-gray-600 text-gray-200'; // Default
@@ -708,19 +781,20 @@
 
     // --- INITIALIZATION ---
     function initializeCharts() {
-        // 1. RADAR CHART: Competency (Data remains stable reflecting core mobile expertise)
-        const ctxRadar = document.getElementById('skillsRadar').getContext('2d');
-        new Chart(ctxRadar, {
+        // 1. PSYCHOMETRIC RADAR CHART
+        const ctxPsychometric = document.getElementById('psychometricRadar').getContext('2d');
+        new Chart(ctxPsychometric, {
             type: 'radar',
             data: {
-                labels: ['Android Native', 'Kotlin/Compose', 'TDD & Quality', 'Cross-Platform (Dart/Swift)'],
+                labels: psychometricData.labels,
                 datasets: [{
-                    label: 'Skill Proficiency Level',
-                    data: [95, 95, 90, 75],
+                    label: 'Psychometric Score',
+                    data: psychometricData.data,
                     fill: true,
+                    // UPDATED COLORS TO AMBER/GOLD THEME
                     backgroundColor: 'rgba(245, 158, 11, 0.2)', // Amber-500 low opacity
                     borderColor: 'rgb(245, 158, 11)', // Amber-500
-                    pointBackgroundColor: 'rgb(245, 158, 11)', // Amber-500
+                    pointBackgroundColor: 'rgb(245, 158, 11)',
                     pointBorderColor: '#1f2937', // Gray-800
                     pointHoverBackgroundColor: '#fff',
                     pointHoverBorderColor: 'rgb(245, 158, 11)'
@@ -738,7 +812,13 @@
                             font: { size: 12, family: 'sans-serif' },
                             color: '#d1d5db' // Gray-300
                         },
-                        ticks: { display: false, max: 100, min: 0 }
+                        ticks: {
+                            display: false,
+                            max: 100,
+                            min: 0,
+                            // Ensure the scale is visually centered, estimated max is ~95
+                            beginAtZero: true
+                        }
                     }
                 },
                 plugins: {
@@ -747,7 +827,7 @@
             }
         });
 
-        // 2. DOUGHNUT CHART: Project Stack (Based on projectData category)
+        // 2. DOUGHNUT CHART: Project Stack
         const stackCounts = projectData.reduce((acc, p) => {
             acc[p.category] = (acc[p.category] || 0) + 1;
             return acc;
