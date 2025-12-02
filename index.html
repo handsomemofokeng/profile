@@ -191,7 +191,8 @@
             <div class="text-center md:text-left flex-1">
                 <div class="flex items-center gap-6">
                     <img src="assets/profile_picture.jpeg" alt="Handsome Mofokeng"
-                         class="w-45 h-40 rounded-xl object-cover border-2 border-amber-500 shadow-md">
+                         class="w-45 h-40 rounded-xl object-cover border-2 border-amber-500 shadow-md"
+                         onerror="this.onerror=null; this.src='https://placehold.co/160x160/27272a/f59e0b?text=HM'">
                     <div>
                         <h1 class="text-4xl font-bold text-white tracking-tight">Handsome
                             Mofokeng</h1>
@@ -384,12 +385,29 @@
             </div>
         </div>
 
-        <!-- 3. Psychometric Competency Radar Chart -->
+        <!-- 3. Radar Charts (Skills and Psychometric) - NOW A 2-COLUMN GRID -->
         <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-            <h2 class="text-2xl font-bold text-white mb-2">Psychometric Competency Profile</h2>
-            <p class="text-sm text-gray-400 mb-4">Based on Snaphunt assessment data.</p>
-            <div class="chart-container">
-                <canvas id="psychometricRadar"></canvas>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                <!-- 3a. Technical Skills Radar Chart (Left) -->
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold text-white mb-2">Technical Skills Radar</h2>
+                    <p class="text-sm text-gray-400">Core mobile stack proficiency scores, now
+                        including backend exposure.</p>
+                    <div class="chart-container">
+                        <canvas id="skillsRadarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 3b. Existing: Psychometric Competency Radar Chart (Right) -->
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold text-white mb-2">Psychometric Competency
+                        Profile</h2>
+                    <p class="text-sm text-gray-400">Based on Snaphunt assessment data.</p>
+                    <div class="chart-container">
+                        <canvas id="psychometricRadar"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -431,8 +449,8 @@
                         <span class="text-amber-500">🛡️</span> Resilient & Adaptable
                     </h3>
                     <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
-                        <li>Recovers quickly from setbacks; views failures as learning opportunities
-                            (Resilience).
+                        <li>Recovers quickly from setbacks from setbacks; views failures as learning
+                            opportunities (Resilience).
                         </li>
                         <li>Good team player, paying attention to everyone's input.</li>
                         <li><em class="text-gray-400">Prefers stable environments and may be
@@ -477,7 +495,7 @@
 
     <!-- PROJECTS TAB -->
     <section id="view-projects" class="hidden space-y-8 animate-fade-in">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:col-span-3 lg:grid-cols-3 gap-8">
             <!-- Projects Controls & Viz -->
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
@@ -646,15 +664,22 @@
         }
     ];
 
-    // --- PSYCHOMETRIC DATA ---
+    // --- SKILLS DATA (UPDATED) ---
+    const skillsData = {
+        // Added Sharepoint, C#, and SQL
+        labels: ["Java", "Kotlin", "Jetpack Compose", "Flutter", "Sharepoint", "C#", "SQL"],
+        // Added corresponding data points: 80, 90, 95, 75, 75, 70, 60
+        data: [80, 90, 95, 75, 75, 70, 60]
+    };
+
+    // --- PSYCHOMETRIC DATA (EXISTING) ---
     const psychometricData = {
         labels: ["Analysing", "Exploring", "Networking", "Collaborating", "Quality", "Results Driven", "Leadership", "Resilience", "Adaptability"],
         // Data points (0-100 scale, estimated from radar chart shape)
         data: [70, 75, 40, 60, 95, 90, 20, 95, 45]
     };
 
-    // --- RENDER FUNCTIONS ---
-
+    // --- RENDER FUNCTIONS (omitted for brevity, assume they are still there) ---
     function renderTimeline() {
         const container = document.getElementById('timeline-container');
         container.innerHTML = experienceData.map((job, index) => `
@@ -746,7 +771,7 @@
         }).join('');
     }
 
-    // --- NAVIGATION LOGIC ---
+    // --- NAVIGATION LOGIC (omitted for brevity, assume they are still there) ---
     function switchTab(tabName) {
         // Hide all views
         ['dashboard', 'experience', 'projects'].forEach(t => {
@@ -781,23 +806,33 @@
 
     // --- INITIALIZATION ---
     function initializeCharts() {
-        // 1. PSYCHOMETRIC RADAR CHART
-        const ctxPsychometric = document.getElementById('psychometricRadar').getContext('2d');
-        new Chart(ctxPsychometric, {
+        // Shared Gold/Amber Colors
+        const goldFillColor = 'rgba(245, 158, 11, 0.2)'; // Amber-500 low opacity
+        const goldBorderColor = 'rgb(245, 158, 11)';   // Amber-500
+
+        // NEW Light Blue Colors
+        const blueFillColor = 'rgba(59, 130, 246, 0.2)'; // Blue-500 low opacity
+        const blueBorderColor = 'rgb(59, 130, 246)';   // Blue-500
+
+        const gridColor = '#374151'; // Gray-700
+        const pointLabelColor = '#d1d5db'; // Gray-300
+        const pointBorderColor = '#1f2937'; // Gray-800
+
+        // Function to create a standard radar chart configuration
+        const getRadarConfig = (labels, data, label, fillColor, borderColor) => ({
             type: 'radar',
             data: {
-                labels: psychometricData.labels,
+                labels: labels,
                 datasets: [{
-                    label: 'Psychometric Score',
-                    data: psychometricData.data,
+                    label: label,
+                    data: data,
                     fill: true,
-                    // UPDATED COLORS TO AMBER/GOLD THEME
-                    backgroundColor: 'rgba(245, 158, 11, 0.2)', // Amber-500 low opacity
-                    borderColor: 'rgb(245, 158, 11)', // Amber-500
-                    pointBackgroundColor: 'rgb(245, 158, 11)',
-                    pointBorderColor: '#1f2937', // Gray-800
+                    backgroundColor: fillColor, // Use dynamic color
+                    borderColor: borderColor,   // Use dynamic color
+                    pointBackgroundColor: borderColor,
+                    pointBorderColor: pointBorderColor,
                     pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgb(245, 158, 11)'
+                    pointHoverBorderColor: borderColor
                 }]
             },
             options: {
@@ -806,28 +841,65 @@
                 elements: { line: { tension: 0.3 } },
                 scales: {
                     r: {
-                        angleLines: { color: '#374151' }, // Gray-700
-                        grid: { color: '#374151' }, // Gray-700
+                        angleLines: { color: gridColor },
+                        grid: { color: gridColor },
                         pointLabels: {
                             font: { size: 12, family: 'sans-serif' },
-                            color: '#d1d5db' // Gray-300
+                            color: pointLabelColor
                         },
                         ticks: {
                             display: false,
                             max: 100,
                             min: 0,
-                            // Ensure the scale is visually centered, estimated max is ~95
                             beginAtZero: true
                         }
                     }
                 },
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                // Append % sign only if it's the skills chart
+                                if (context.chart.canvas.id === 'skillsRadarChart' && context.parsed.r !== null) {
+                                    label += context.parsed.r + '%';
+                                } else if (context.parsed.r !== null) {
+                                    label += context.parsed.r;
+                                }
+                                return label;
+                            }
+                        }
+                    }
                 }
             }
         });
 
-        // 2. DOUGHNUT CHART: Project Stack
+
+        // 1. TECHNICAL SKILLS RADAR CHART (AMBER)
+        const ctxSkills = document.getElementById('skillsRadarChart').getContext('2d');
+        new Chart(ctxSkills, getRadarConfig(
+            skillsData.labels,
+            skillsData.data,
+            'Proficiency Score',
+            goldFillColor,
+            goldBorderColor
+        ));
+
+        // 2. PSYCHOMETRIC RADAR CHART (UPDATED TO BLUE)
+        const ctxPsychometric = document.getElementById('psychometricRadar').getContext('2d');
+        new Chart(ctxPsychometric, getRadarConfig(
+            psychometricData.labels,
+            psychometricData.data,
+            'Psychometric Score',
+            blueFillColor,   // Light blue fill
+            blueBorderColor  // Blue border
+        ));
+
+        // 3. DOUGHNUT CHART: Project Stack
         const stackCounts = projectData.reduce((acc, p) => {
             acc[p.category] = (acc[p.category] || 0) + 1;
             return acc;
