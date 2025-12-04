@@ -97,22 +97,70 @@
                 margin: 0 !important;
             }
 
-            /* Force grids to stack to utilize full width and avoid gap issues */
+            /* Force general grids to stack to utilize full width and avoid gap issues */
             .grid {
                 display: block !important;
             }
-            
+
             .grid > * {
                 margin-bottom: 1rem;
             }
-            
+
+            /* OVERRIDE: 1. Show summary cards in a single row for printing (3 columns) */
+            .summary-print-row {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Adjust padding/margin for print density on summary cards */
+            .summary-print-row > div {
+                margin-bottom: 0 !important;
+                padding: 0.5rem !important;
+                border: 1px solid #e5e7eb !important; /* Add light border for visual separation in print */
+                box-shadow: none !important;
+                background-color: #ffffff !important;
+                color: #1f2937 !important;
+            }
+
+            /* OVERRIDE: 2. Show charts side-by-side for printing (2 columns) */
+            .charts-print-row {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            .charts-print-row > div {
+                margin-bottom: 0 !important;
+            }
+
+            /* OVERRIDE 3: Technical Arsenal to 2 columns for printing */
+            .arsenal-print-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.75rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Chart Styling for Print (Force Black/High Contrast) */
+            #skillsRadarChart, #psychometricRadar {
+                /* General style override for high contrast */
+                -webkit-filter: invert(1) grayscale(1) !important;
+                filter: invert(1) grayscale(1) !important;
+            }
+            /* Specific fix to ensure Chart.js elements (labels/grid lines) render black */
+            canvas {
+                color: #000000 !important;
+            }
+
             /* Header Compact */
             header {
                 margin-bottom: 1rem !important;
                 padding: 1rem !important;
                 border: 1px solid #e5e7eb !important;
             }
-            
+
             /* Cards and Containers */
             .bg-gray-800, .bg-gray-700, .bg-gray-900 {
                 background-color: #ffffff !important;
@@ -123,7 +171,7 @@
                 page-break-inside: avoid;
                 margin-bottom: 0.5rem !important;
             }
-            
+
             /* Specific handling for timeline items to prevent splitting */
             #timeline-container > div {
                 break-inside: avoid;
@@ -137,7 +185,7 @@
                 height: 250px !important; /* Reduce height to save space */
                 margin-bottom: 1rem;
             }
-            
+
             /* Typography High Contrast */
             p, h1, h2, h3, li, span, div, strong {
                 color: #1f2937 !important;
@@ -151,7 +199,7 @@
             .text-white {
                 color: #111827 !important;
             }
-            
+
             /* Badges */
             .bg-amber-800\/50 {
                 background-color: #fef3c7 !important;
@@ -263,7 +311,8 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 w-full">
 
         <!-- Quick quantitative summary (Left/Center alignment) -->
-        <div class="grid grid-cols-3 gap-2 text-center w-full md:w-auto">
+        <!-- ADDED summary-print-row CLASS HERE for specific print styling -->
+        <div class="grid grid-cols-3 gap-2 text-center w-full md:w-auto summary-print-row">
             <div class="bg-gray-700 p-3 rounded-xl border border-gray-600">
                 <div class="text-xl font-bold text-white">5+</div>
                 <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Years Exp
@@ -348,7 +397,8 @@
                     details</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- ADDED arsenal-print-grid CLASS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 arsenal-print-grid">
                 <!-- Card 1 -->
                 <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
                     <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">Android
@@ -369,6 +419,7 @@
                         <li>➤ Git Version Control</li>
                         <li>➤ Gitlab CI/CD & Deployments</li>
                         <li>➤ Debugging & Coding Standards</li>
+
                     </ul>
                 </div>
                 <!-- Card 3 -->
@@ -396,9 +447,9 @@
             </div>
         </div>
 
-        <!-- 3. Radar Charts (Skills and Psychometric) - NOW A 2-COLUMN GRID -->
+        <!-- 3. Radar Charts (Skills and Psychometric) - NOW A 2-COLUMN GRID, ADDED charts-print-row CLASS -->
         <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 charts-print-row">
 
                 <!-- 3a. Technical Skills Radar Chart (Left) -->
                 <div class="space-y-4">
