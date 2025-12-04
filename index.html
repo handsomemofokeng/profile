@@ -97,16 +97,16 @@
                 margin: 0 !important;
             }
 
-            /* Force grids to stack to utilize full width and avoid gap issues */
+            /* Force general grids to stack to utilize full width and avoid gap issues */
             .grid {
                 display: block !important;
             }
-            
+
             .grid > * {
                 margin-bottom: 1rem;
             }
-            
-            /* OVERRIDE: Show summary cards in a single row for printing (3 columns) */
+
+            /* OVERRIDE: 1. Show summary cards in a single row for printing (3 columns) */
             .summary-print-row {
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr) !important;
@@ -122,6 +122,28 @@
                 box-shadow: none !important;
                 background-color: #ffffff !important;
                 color: #1f2937 !important;
+            }
+
+            /* OVERRIDE: 2. Show charts side-by-side for printing (2 columns) */
+            .charts-print-row {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            .charts-print-row > div {
+                margin-bottom: 0 !important;
+            }
+
+            /* Chart Styling for Print (Force Black/High Contrast) */
+            #skillsRadarChart, #psychometricRadar {
+                /* General style override for high contrast */
+                -webkit-filter: invert(1) grayscale(1) !important;
+                filter: invert(1) grayscale(1) !important;
+            }
+            /* Specific fix to ensure Chart.js elements (labels/grid lines) render black */
+            canvas {
+                color: #000000 !important;
             }
 
             /* Header Compact */
@@ -388,6 +410,7 @@
                         <li>➤ Git Version Control</li>
                         <li>➤ Gitlab CI/CD & Deployments</li>
                         <li>➤ Debugging & Coding Standards</li>
+
                     </ul>
                 </div>
                 <!-- Card 3 -->
@@ -415,9 +438,9 @@
             </div>
         </div>
 
-        <!-- 3. Radar Charts (Skills and Psychometric) - NOW A 2-COLUMN GRID -->
+        <!-- 3. Radar Charts (Skills and Psychometric) - NOW A 2-COLUMN GRID, ADDED charts-print-row CLASS -->
         <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 charts-print-row">
 
                 <!-- 3a. Technical Skills Radar Chart (Left) -->
                 <div class="space-y-4">
