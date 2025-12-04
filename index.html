@@ -106,13 +106,31 @@
                 margin-bottom: 1rem;
             }
             
+            /* OVERRIDE: Show summary cards in a single row for printing (3 columns) */
+            .summary-print-row {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Adjust padding/margin for print density on summary cards */
+            .summary-print-row > div {
+                margin-bottom: 0 !important;
+                padding: 0.5rem !important;
+                border: 1px solid #e5e7eb !important; /* Add light border for visual separation in print */
+                box-shadow: none !important;
+                background-color: #ffffff !important;
+                color: #1f2937 !important;
+            }
+
             /* Header Compact */
             header {
                 margin-bottom: 1rem !important;
                 padding: 1rem !important;
                 border: 1px solid #e5e7eb !important;
             }
-            
+
             /* Cards and Containers */
             .bg-gray-800, .bg-gray-700, .bg-gray-900 {
                 background-color: #ffffff !important;
@@ -123,7 +141,7 @@
                 page-break-inside: avoid;
                 margin-bottom: 0.5rem !important;
             }
-            
+
             /* Specific handling for timeline items to prevent splitting */
             #timeline-container > div {
                 break-inside: avoid;
@@ -137,7 +155,7 @@
                 height: 250px !important; /* Reduce height to save space */
                 margin-bottom: 1rem;
             }
-            
+
             /* Typography High Contrast */
             p, h1, h2, h3, li, span, div, strong {
                 color: #1f2937 !important;
@@ -151,7 +169,7 @@
             .text-white {
                 color: #111827 !important;
             }
-            
+
             /* Badges */
             .bg-amber-800\/50 {
                 background-color: #fef3c7 !important;
@@ -263,7 +281,8 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 w-full">
 
         <!-- Quick quantitative summary (Left/Center alignment) -->
-        <div class="grid grid-cols-3 gap-2 text-center w-full md:w-auto">
+        <!-- ADDED summary-print-row CLASS HERE for specific print styling -->
+        <div class="grid grid-cols-3 gap-2 text-center w-full md:w-auto summary-print-row">
             <div class="bg-gray-700 p-3 rounded-xl border border-gray-600">
                 <div class="text-xl font-bold text-white">5+</div>
                 <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Years Exp
