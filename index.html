@@ -135,6 +135,14 @@
                 margin-bottom: 0 !important;
             }
 
+            /* OVERRIDE 3: Technical Arsenal to 2 columns for printing */
+            .arsenal-print-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.75rem !important;
+                margin-bottom: 1rem !important;
+            }
+
             /* Chart Styling for Print (Force Black/High Contrast) */
             #skillsRadarChart, #psychometricRadar {
                 /* General style override for high contrast */
@@ -389,7 +397,8 @@
                     details</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- ADDED arsenal-print-grid CLASS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 arsenal-print-grid">
                 <!-- Card 1 -->
                 <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
                     <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">Android
