@@ -233,15 +233,18 @@
 <!-- Main Layout Container -->
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- Header Section (Updated with SVG Icons) -->
+    <!-- Header Section (Updated with centered image/stacked text on mobile) -->
     <header class="bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-700 relative group">
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-center md:text-left flex-1">
-                <div class="flex items-center gap-6">
+            <div class="text-center md:text-left flex-1 w-full">
+                <!-- MODIFIED: Added flex-col, items-center for mobile, switched back to flex-row for MD and up -->
+                <div class="flex flex-col items-center gap-6 md:flex-row md:items-start">
                     <img src="assets/profile_picture.jpeg" alt="Handsome Mofokeng"
                          class="w-45 h-40 rounded-xl object-cover border-2 border-amber-500 shadow-md"
                          onerror="this.onerror=null; this.src='https://placehold.co/160x160/27272a/f59e0b?text=HM'">
-                    <div>
+
+                    <!-- Text Content Container -->
+                    <div class="text-center md:text-left">
                         <h1 class="text-4xl font-bold text-white tracking-tight">Handsome
                             Mofokeng</h1>
                         <p class="text-xl text-amber-500 font-medium mt-1">Mobile Developer (Kotlin
