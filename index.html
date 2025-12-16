@@ -27,6 +27,19 @@
         }
     </script>
 
+    <!-- FOUC FIX: Apply Dark Mode instantly to prevent flash of unstyled content -->
+    <script>
+        (function() {
+            // Check localStorage or system preference and apply the 'dark' class immediately
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else if (theme === 'light') {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -52,30 +65,15 @@
         }
 
         /* Base Scrollbar (Light Mode) */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f3f4f6;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #d97706; /* Amber-600 */
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #b45309; /* Amber-700 */
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f3f4f6; }
+        ::-webkit-scrollbar-thumb { background: #d97706; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b45309; }
 
         /* Dark Mode Scrollbar Overrides */
-        .dark ::-webkit-scrollbar-track {
-            background: #1f2937; /* Gray-800 */
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #d97706; /* Amber-700 */
-        }
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: #f59e0b; /* Amber-500 */
-        }
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #d97706; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
         /* Active Tab Styles */
         .active-tab {
@@ -94,166 +92,54 @@
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
 
-        /* PRINT / PDF STYLES - ROBUST ORIGINAL FORMAT */
+        /* Timeline Marker Styles (IMPROVED) */
+        .timeline-marker {
+            position: absolute;
+            left: -42px; /* Position next to the line */
+            top: 0;
+            height: 14px;
+            width: 14px;
+            border-radius: 50%;
+            background-color: #f59e0b; /* Amber-500 */
+            border: 3px solid #f9fafb; /* Light mode background */
+            box-shadow: 0 0 0 4px #f59e0b; /* Ring effect */
+            transition: all 0.3s ease;
+        }
+        .dark .timeline-marker {
+            border-color: #1f2937; /* Dark mode background */
+            box-shadow: 0 0 0 4px #f59e0b; /* Ring effect */
+        }
+        .timeline-item:hover .timeline-marker {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 5px #f59e0b;
+        }
+
+        /* Print Styles - Retained for Robust PDF output */
         @media print {
-            @page {
-                margin: 0.5cm;
-                size: A4;
-            }
-
-            body {
-                background-color: #ffffff !important;
-                color: #1f2937 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                font-size: 12px; /* Slightly smaller font to fit content better */
-            }
-
-            /* Hide interactive elements and footer */
-            nav,
-            button:not(.hidden),
-            .no-print,
-            #project-filters,
-            #theme-toggle,
-            footer {
-                display: none !important;
-            }
-
-            /* Show all content sections */
-            section {
-                display: block !important;
-                page-break-inside: auto !important; /* Allow sections to break across pages */
-                margin-bottom: 1rem !important;
-                opacity: 1 !important;
-                animation: none !important;
-            }
-
-            /* Experience Timeline: Expand all details */
-            [id^="job-details-"] {
-                display: block !important;
-            }
-            [id^="job-hint-"] {
-                display: none !important;
-            }
-
-            /* Layout Adjustments for Density */
-            .max-w-7xl {
-                max-width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            /* Force general grids to stack to utilize full width and avoid gap issues */
-            .grid {
-                display: block !important;
-            }
-
-            .grid > * {
-                margin-bottom: 1rem;
-            }
-
-            /* OVERRIDE: 1. Show summary cards in a single row for printing (3 columns) */
-            .summary-print-row {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.5rem !important;
-                margin-bottom: 1rem !important;
-            }
-
-            /* Adjust padding/margin for print density on summary cards */
-            .summary-print-row > div {
-                margin-bottom: 0 !important;
-                padding: 0.5rem !important;
-                border: 1px solid #e5e7eb !important; /* Add light border for visual separation in print */
-                box-shadow: none !important;
-                background-color: #ffffff !important;
-                color: #1f2937 !important;
-            }
-
-            /* OVERRIDE: 2. Show charts side-by-side for printing (2 columns) */
-            .charts-print-row {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 1rem !important;
-                margin-bottom: 1rem !important;
-            }
-            .charts-print-row > div {
-                margin-bottom: 0 !important;
-            }
-
-            /* OVERRIDE 3: Technical Arsenal to 2 columns for printing */
-            .arsenal-print-grid {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 0.75rem !important;
-                margin-bottom: 1rem !important;
-            }
-
-            /* Chart Styling for Print (Force Black/High Contrast) */
-            #skillsRadarChart, #psychometricRadar {
-                /* General style override for high contrast */
-                -webkit-filter: invert(1) grayscale(1) !important;
-                filter: invert(1) grayscale(1) !important;
-            }
-            /* Specific fix to ensure Chart.js elements (labels/grid lines) render black */
-            canvas {
-                color: #000000 !important;
-            }
-
-            /* Header Compact */
-            header {
-                margin-bottom: 1rem !important;
-                padding: 1rem !important;
-                border: 1px solid #e5e7eb !important;
-            }
-
-            /* Cards and Containers - Force Light Mode Look */
-            .bg-white, .dark\:bg-gray-800, .dark\:bg-gray-900, .dark\:bg-gray-700 {
-                background-color: #ffffff !important;
-                border: 1px solid #e5e7eb !important;
-                box-shadow: none !important;
-                color: #1f2937 !important;
-                break-inside: avoid; /* Prevent individual cards from splitting */
-                page-break-inside: avoid;
-                margin-bottom: 0.5rem !important;
-            }
-
-            /* Specific handling for timeline items to prevent splitting */
-            #timeline-container > div {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                margin-bottom: 1rem;
-            }
-
-            /* Chart adjustments */
-            .chart-container {
-                page-break-inside: avoid;
-                height: 250px !important; /* Reduce height to save space */
-                margin-bottom: 1rem;
-            }
-
-            /* Typography High Contrast */
-            p, h1, h2, h3, li, span, div, strong {
-                color: #1f2937 !important;
-            }
-
-            .text-white, .dark\:text-white, .dark\:text-gray-100, .dark\:text-gray-300 {
-                color: #1f2937 !important;
-            }
-
-            /* Badges */
-            .bg-amber-100, .dark\:bg-amber-800\/50 {
-                background-color: #fef3c7 !important;
-                color: #92400e !important;
-                border: 1px solid #fcd34d;
-            }
-            .bg-gray-100, .dark\:bg-gray-700 {
-                background-color: #f3f4f6 !important;
-                color: #1f2937 !important;
-                border: 1px solid #e5e7eb;
-            }
-
-            /* Typography sizing for print */
+            @page { margin: 0.5cm; size: A4; }
+            body { background-color: #ffffff !important; color: #1f2937 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 12px; }
+            nav, button:not(.hidden), .no-print, #project-filters, #theme-toggle, footer { display: none !important; }
+            section { display: block !important; page-break-inside: auto !important; margin-bottom: 1rem !important; opacity: 1 !important; animation: none !important; }
+            [id^="job-details-"] { display: block !important; }
+            [id^="job-hint-"] { display: none !important; }
+            .max-w-7xl { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+            .grid { display: block !important; }
+            .grid > * { margin-bottom: 1rem; }
+            .summary-print-row { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 0.5rem !important; margin-bottom: 1rem !important; }
+            .summary-print-row > div { margin-bottom: 0 !important; padding: 0.5rem !important; border: 1px solid #e5e7eb !important; box-shadow: none !important; background-color: #ffffff !important; color: #1f2937 !important; }
+            .charts-print-row { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 1rem !important; margin-bottom: 1rem !important; }
+            .charts-print-row > div { margin-bottom: 0 !important; }
+            .arsenal-print-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; margin-bottom: 1rem !important; }
+            #skillsRadarChart, #psychometricRadar { -webkit-filter: invert(1) grayscale(1) !important; filter: invert(1) grayscale(1) !important; }
+            canvas { color: #000000 !important; }
+            header { margin-bottom: 1rem !important; padding: 1rem !important; border: 1px solid #e5e7eb !important; }
+            .bg-white, .dark\:bg-gray-800, .dark\:bg-gray-900, .dark\:bg-gray-700 { background-color: #ffffff !important; border: 1px solid #e5e7eb !important; box-shadow: none !important; color: #1f2937 !important; break-inside: avoid; page-break-inside: avoid; margin-bottom: 0.5rem !important; }
+            #timeline-container > div { break-inside: avoid; page-break-inside: avoid; margin-bottom: 1rem; }
+            .chart-container { page-break-inside: avoid; height: 250px !important; margin-bottom: 1rem; }
+            p, h1, h2, h3, li, span, div, strong { color: #1f2937 !important; }
+            .text-white, .dark\:text-white, .dark\:text-gray-100, .dark\:text-gray-300 { color: #1f2937 !important; }
+            .bg-amber-100, .dark\:bg-amber-800\/50 { background-color: #fef3c7 !important; color: #92400e !important; border: 1px solid #fcd34d; }
+            .bg-gray-100, .dark\:bg-gray-700 { background-color: #f3f4f6 !important; color: #1f2937 !important; border: 1px solid #e5e7eb; }
             h1 { font-size: 1.5rem !important; }
             h2 { font-size: 1.25rem !important; margin-bottom: 0.5rem !important; }
             p { margin-bottom: 0.5rem !important; line-height: 1.4; }
@@ -289,8 +175,9 @@
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="text-center md:text-left flex-1">
                 <div class="flex flex-col md:flex-row items-center gap-6">
+                    <!-- PROFILE PICTURE -->
                     <img src="assets/profile_picture.jpeg" alt="Handsome Mofokeng"
-                         class="w-40 h-40 rounded-xl object-cover border-2 border-amber-500 shadow-md"
+                         class="w-45 h-40 rounded-xl object-cover border-2 border-amber-500 shadow-md"
                          onerror="this.onerror=null; this.src='https://placehold.co/160x160/27272a/f59e0b?text=HM'">
                     <div class="text-center md:text-left">
                         <h1 class="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
@@ -332,16 +219,19 @@
                                 Johannesburg, Gauteng
                             </span>
 
-                            <a href="https://www.linkedin.com/in/handsome-mofokeng" target="_blank"
+                            <a href="https://www.linkedin.com/in/handsome-mofokeng"
+                               target="_blank"
                                class="text-amber-600 dark:text-amber-500 hover:text-amber-500 dark:hover:text-amber-400 font-semibold underline decoration-2 underline-offset-2 flex items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                      class="w-4 h-4">
-                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                    <path
+                                            d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                    <path
+                                            d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
                                 </svg>
-                                LinkedIn Profile
+                                LinkedIn
                             </a>
                         </div>
                     </div>
@@ -489,23 +379,23 @@
             </div>
         </div>
 
-        <!-- 3. Radar Charts -->
+        <!-- 3. Radar Charts (IMPROVED SCALE) -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 charts-print-row">
                 <div class="space-y-4">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Technical
-                        Skills Radar</h2>
+                        Skills Radar (0-100)</h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Core mobile stack
-                        proficiency scores.</p>
+                        proficiency scores on a scale of 0 to 100.</p>
                     <div class="chart-container">
                         <canvas id="skillsRadarChart"></canvas>
                     </div>
                 </div>
                 <div class="space-y-4">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Psychometric
-                        Competency Profile</h2>
+                        Competency Profile (0-100)</h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Based on Snaphunt assessment
-                        data.</p>
+                        data, scored 0 to 100.</p>
                     <div class="chart-container">
                         <canvas id="psychometricRadar"></canvas>
                     </div>
@@ -574,6 +464,7 @@
                 A chronological view of my professional journey. Click on any role to expand and
                 view detailed responsibilities.
             </p>
+            <!-- Timeline Container (IMPROVED STRUCTURE) -->
             <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 space-y-10"
                  id="timeline-container">
                 <!-- Injected via JS -->
@@ -595,7 +486,7 @@
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 sticky top-24 no-print">
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Filter
                         Projects</h3>
-                    <!-- Project Filter Buttons - Now uses flexbox for horizontal layout on small/medium screens -->
+                    <!-- Project Filter Buttons -->
                     <div class="flex flex-wrap gap-2" id="project-filters">
                         <button onclick="filterProjects('all')"
                                 class="flex-grow text-center px-4 py-2 rounded-lg text-sm font-medium bg-amber-600 text-white hover:opacity-90 filter-btn"
@@ -624,7 +515,8 @@
                         <span id="project-count"
                               class="text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">4 Items</span>
                     </div>
-                    <div class="grid grid-cols-1 gap-6" id="projects-grid">
+                    <!-- CHANGED: Added md:grid-cols-2 for grid layout on medium and larger screens -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="projects-grid">
                         <!-- Injected via JS -->
                     </div>
                 </div>
@@ -711,12 +603,18 @@
     let charts = {};
 
     // --- RENDER FUNCTIONS ---
+    /**
+     * Renders the career timeline with the new marker style and click logic.
+     */
     function renderTimeline() {
         const container = document.getElementById('timeline-container');
         container.innerHTML = experienceData.map((job, index) => `
-            <div class="relative group cursor-pointer" onclick="toggleJob(${index})">
-                <div class="absolute -left-[41px] h-5 w-5 rounded-full border-4 border-gray-100 dark:border-gray-900 ${index === 0 ? 'bg-amber-500' : 'bg-gray-400'} shadow-md"></div>
-                <div class="bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-5 rounded-xl border border-gray-200 dark:border-gray-600 transition-all duration-300 hover:shadow-xl hover:border-amber-500/50">
+            <div class="relative group timeline-item">
+                <!-- Timeline Marker (CSS defined) -->
+                <div class="timeline-marker"></div>
+
+                <!-- Timeline Card - Clickable Area -->
+                <div class="bg-gray-50 dark:bg-gray-700 p-5 rounded-xl border border-gray-200 dark:border-gray-600 transition-all duration-300 hover:shadow-xl hover:border-amber-500/50 cursor-pointer" onclick="toggleJob(${index})">
                     <div class="flex justify-between items-start flex-wrap gap-2">
                         <div>
                             <h3 class="text-lg font-bold text-gray-900 dark:text-white">${job.role}</h3>
@@ -724,27 +622,39 @@
                         </div>
                         <span class="text-xs font-semibold px-2 py-1 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">${job.period}</span>
                     </div>
+
+                    <!-- Details Container -->
                     <div id="job-details-${index}" class="${index === 0 ? 'block' : 'hidden'} mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-                        <ul class="list-none space-y-2">
-                            ${job.responsibilities.map(r => `<li class="flex items-start text-sm text-gray-600 dark:text-gray-300"><span class="text-amber-500 mr-2 mt-1">➤</span><span>${r}</span></li>`).join('')}
+                        <ul class="list-disc space-y-2 ml-5">
+                            ${job.responsibilities.map(r => `<li class="text-sm text-gray-600 dark:text-gray-300">${r}</li>`).join('')}
                         </ul>
                     </div>
+
+                    <!-- Toggle Hint -->
                     <div class="mt-2 text-center">
-                        <span class="text-xs text-gray-500 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors" id="job-hint-${index}">${index === 0 ? 'Click to collapse' : 'Click to expand details'}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors" id="job-hint-${index}">
+                            ${index === 0 ? 'Click to collapse' : 'Click to expand details'}
+                        </span>
                     </div>
                 </div>
             </div>
         `).join('');
     }
 
+    /**
+     * Toggles the visibility of job details and updates the hint text.
+     */
     function toggleJob(index) {
         const details = document.getElementById(`job-details-${index}`);
         const hint = document.getElementById(`job-hint-${index}`);
+
         if (details.classList.contains('hidden')) {
-            details.classList.remove('hidden'); details.classList.add('block');
+            details.classList.remove('hidden');
+            details.classList.add('block');
             hint.textContent = 'Click to collapse';
         } else {
-            details.classList.add('hidden'); details.classList.remove('block');
+            details.classList.add('hidden');
+            details.classList.remove('block');
             hint.textContent = 'Click to expand details';
         }
     }
@@ -805,37 +715,36 @@
         document.getElementById(`tab-${tabName}`).classList.add('active-tab');
         document.getElementById(`tab-${tabName}`).classList.remove('text-gray-600', 'dark:text-gray-300');
 
+        // Reinitialize charts when switching to dashboard or projects tab
         if (tabName === 'dashboard' || tabName === 'projects') initCharts();
     }
 
     // --- THEME LOGIC ---
     function toggleDarkMode() {
         const html = document.documentElement;
-        if (html.classList.contains('dark')) {
-            html.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-        } else {
-            html.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-        }
-        updateIcons();
+        const isDark = html.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateIcons(isDark);
         initCharts(); // Redraw charts with correct colors
     }
 
-    function updateIcons() {
-        const isDark = document.documentElement.classList.contains('dark');
+    function updateIcons(isDark) {
+        // Use the current state of the DOM if no argument is passed (for initial load)
+        if (typeof isDark === 'undefined') {
+            isDark = document.documentElement.classList.contains('dark');
+        }
         document.getElementById('sun-icon').classList.toggle('hidden', !isDark); // Show sun in dark mode
         document.getElementById('moon-icon').classList.toggle('hidden', isDark); // Show moon in light mode
     }
 
-    // --- CHARTS ---
+    // --- CHARTS (IMPROVED SCALE) ---
     function initCharts() {
         const isDark = document.documentElement.classList.contains('dark');
-        const gridColor = isDark ? '#374151' : '#e5e7eb';
+        const gridColor = isDark ? 'rgba(80, 80, 80, 0.5)' : 'rgba(200, 200, 200, 0.8)';
         const labelColor = isDark ? '#d1d5db' : '#4b5563';
         const backdropColor = isDark ? '#1f2937' : '#ffffff';
 
-        // Destroy existing
+        // Destroy existing chart instances to prevent "Canvas is already in use" errors
         if (charts.skills) charts.skills.destroy();
         if (charts.psycho) charts.psycho.destroy();
         if (charts.doughnut) charts.doughnut.destroy();
@@ -851,6 +760,9 @@
                     backgroundColor: color.bg,
                     borderColor: color.border,
                     pointBackgroundColor: color.border,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: color.border
                 }]
             },
             options: {
@@ -858,10 +770,20 @@
                 maintainAspectRatio: false,
                 scales: {
                     r: {
+                        // Display 0-100 scale clearly
+                        suggestedMin: 0,
+                        suggestedMax: 100,
                         angleLines: { color: gridColor },
-                        grid: { color: gridColor },
-                        pointLabels: { color: labelColor, font: { size: 12 } },
-                        ticks: { display: false, backdropColor: 'transparent' }
+                        grid: { color: gridColor, lineWidth: 1 },
+                        pointLabels: { color: labelColor, font: { size: 14, weight: 'bold' } },
+                        ticks: {
+                            display: true,
+                            stepSize: 25, // Show ticks at 25, 50, 75, 100
+                            color: labelColor,
+                            backdropColor: backdropColor, // Match chart background for readability
+                            showLabelBackdrop: true,
+                            font: { size: 10 }
+                        }
                     }
                 },
                 plugins: { legend: { display: false } }
@@ -870,14 +792,14 @@
 
         const ctxSkills = document.getElementById('skillsRadarChart');
         if (ctxSkills) {
-            charts.skills = new Chart(ctxSkills, radarConfig(skillsData, 'Skills', {
+            charts.skills = new Chart(ctxSkills, radarConfig(skillsData, 'Skills Proficiency', {
                 bg: 'rgba(245, 158, 11, 0.2)', border: 'rgb(245, 158, 11)'
             }));
         }
 
         const ctxPsycho = document.getElementById('psychometricRadar');
         if (ctxPsycho) {
-            charts.psycho = new Chart(ctxPsycho, radarConfig(psychometricData, 'Traits', {
+            charts.psycho = new Chart(ctxPsycho, radarConfig(psychometricData, 'Psychometric Traits', {
                 bg: 'rgba(59, 130, 246, 0.2)', border: 'rgb(59, 130, 246)'
             }));
         }
@@ -906,15 +828,10 @@
 
     // --- INIT ---
     window.onload = function() {
-        const storedTheme = localStorage.getItem('theme');
-        if (storedTheme === 'light') {
-            document.documentElement.classList.remove('dark');
-        } else {
-            document.documentElement.classList.add('dark');
-        }
-        updateIcons();
+        // Initial setup
+        updateIcons(); // Update icons based on immediate dark mode setting
         renderTimeline();
-        filterProjects('all'); // Corrected function call for initial load
+        filterProjects('all');
         initCharts();
     };
 </script>
