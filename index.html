@@ -1,13 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Handsome Mofokeng | Interactive Portfolio</title>
+
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Configure Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable manual toggle
+            theme: {
+                extend: {
+                    colors: {
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        /* Custom Chart Container Styles as per requirements */
+        /* Custom Chart Container Styles */
         .chart-container {
             position: relative;
             width: 100%;
@@ -28,34 +51,56 @@
             scroll-behavior: smooth;
         }
 
-        /* Custom scrollbar for webkit (Dark Theme) */
+        /* Base Scrollbar (Light Mode) */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #1f2937; /* Gray-800 */
+            background: #f3f4f6;
         }
         ::-webkit-scrollbar-thumb {
-            background: #d97706; /* Amber-700 for scrollbar thumb */
+            background: #d97706; /* Amber-600 */
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
+            background: #b45309; /* Amber-700 */
+        }
+
+        /* Dark Mode Scrollbar Overrides */
+        .dark ::-webkit-scrollbar-track {
+            background: #1f2937; /* Gray-800 */
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #d97706; /* Amber-700 */
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
             background: #f59e0b; /* Amber-500 */
         }
 
+        /* Active Tab Styles */
         .active-tab {
-            border-bottom: 2px solid #f59e0b; /* Amber-500 */
-            color: #f59e0b;
+            border-bottom: 2px solid #d97706; /* Amber-600 (Light) */
+            color: #d97706;
             font-weight: 600;
         }
 
-        /* PRINT / PDF STYLES */
+        .dark .active-tab {
+            border-bottom: 2px solid #f59e0b; /* Amber-500 (Dark) */
+            color: #f59e0b;
+        }
+
+        /* Transition for smooth theme switching */
+        body, div, header, nav, section, p, h1, h2, h3, span, li, button {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* PRINT / PDF STYLES - ROBUST ORIGINAL FORMAT */
         @media print {
             @page {
                 margin: 0.5cm;
                 size: A4;
             }
-            
+
             body {
                 background-color: #ffffff !important;
                 color: #1f2937 !important;
@@ -65,10 +110,11 @@
             }
 
             /* Hide interactive elements and footer */
-            nav, 
-            button:not(.hidden), 
+            nav,
+            button:not(.hidden),
             .no-print,
             #project-filters,
+            #theme-toggle,
             footer {
                 display: none !important;
             }
@@ -89,7 +135,7 @@
             [id^="job-hint-"] {
                 display: none !important;
             }
-            
+
             /* Layout Adjustments for Density */
             .max-w-7xl {
                 max-width: 100% !important;
@@ -161,8 +207,8 @@
                 border: 1px solid #e5e7eb !important;
             }
 
-            /* Cards and Containers */
-            .bg-gray-800, .bg-gray-700, .bg-gray-900 {
+            /* Cards and Containers - Force Light Mode Look */
+            .bg-white, .dark\:bg-gray-800, .dark\:bg-gray-900, .dark\:bg-gray-700 {
                 background-color: #ffffff !important;
                 border: 1px solid #e5e7eb !important;
                 box-shadow: none !important;
@@ -190,31 +236,21 @@
             p, h1, h2, h3, li, span, div, strong {
                 color: #1f2937 !important;
             }
-            .text-amber-500, .text-amber-300 {
-                color: #d97706 !important;
-            }
-            .text-gray-400, .text-gray-500, .text-gray-300 {
-                color: #4b5563 !important;
-            }
-            .text-white {
-                color: #111827 !important;
+
+            .text-white, .dark\:text-white, .dark\:text-gray-100, .dark\:text-gray-300 {
+                color: #1f2937 !important;
             }
 
             /* Badges */
-            .bg-amber-800\/50 {
+            .bg-amber-100, .dark\:bg-amber-800\/50 {
                 background-color: #fef3c7 !important;
                 color: #92400e !important;
                 border: 1px solid #fcd34d;
             }
-            .bg-sky-800\/50 {
-                background-color: #e0f2fe !important;
-                color: #075985 !important;
-                border: 1px solid #7dd3fc;
-            }
-            .bg-purple-800\/50 {
-                background-color: #f3e8ff !important;
-                color: #581c87 !important;
-                border: 1px solid #c084fc;
+            .bg-gray-100, .dark\:bg-gray-700 {
+                background-color: #f3f4f6 !important;
+                color: #1f2937 !important;
+                border: 1px solid #e5e7eb;
             }
 
             /* Typography sizing for print */
@@ -224,53 +260,62 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans antialiased selection:bg-amber-900/50 selection:text-amber-300">
+<body class="font-sans antialiased bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 selection:bg-amber-200 dark:selection:bg-amber-900/50 selection:text-amber-800 dark:selection:text-amber-300">
 
-<!-- Chosen Palette: Black (Gray-900) and Gold (Amber-500).
-     Background: Gray-900 (#111827). Text: Gray-100/White.
-     Accents: Amber-500 (#f59e0b) for highlights and calls to action.
-     Cards: Gray-800 (#1f2937) for visual separation from the background. -->
 <!-- Main Layout Container -->
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- Header Section (Updated with SVG Icons) -->
-    <header class="bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-700 relative group">
+    <!-- Header Section -->
+    <header class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-700 relative group">
+
+        <!-- Toggle Button -->
+        <button id="theme-toggle" onclick="toggleDarkMode()"
+                class="absolute top-4 right-4 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none z-10 no-print"
+                aria-label="Toggle Dark Mode">
+            <!-- Sun Icon (for Dark Mode) -->
+            <svg id="sun-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            <!-- Moon Icon (for Light Mode) -->
+            <svg id="moon-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+            </svg>
+        </button>
+
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="text-center md:text-left flex-1">
-                <div class="flex items-center gap-6">
+                <div class="flex flex-col md:flex-row items-center gap-6">
                     <img src="assets/profile_picture.jpeg" alt="Handsome Mofokeng"
-                         class="w-45 h-40 rounded-xl object-cover border-2 border-amber-500 shadow-md"
+                         class="w-40 h-40 rounded-xl object-cover border-2 border-amber-500 shadow-md"
                          onerror="this.onerror=null; this.src='https://placehold.co/160x160/27272a/f59e0b?text=HM'">
-                    <div>
-                        <h1 class="text-4xl font-bold text-white tracking-tight">Handsome
-                            Mofokeng</h1>
-                        <p class="text-xl text-amber-500 font-medium mt-1">Mobile Developer (Kotlin
-                            & Jetpack Compose Specialist)</p>
-                        <div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 justify-center md:justify-start text-sm text-gray-400">
+                    <div class="text-center md:text-left">
+                        <h1 class="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
+                            Handsome Mofokeng</h1>
+                        <p class="text-xl text-amber-600 dark:text-amber-500 font-medium mt-1">
+                            Mobile Developer (Kotlin & Jetpack Compose Specialist)</p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 justify-center md:justify-start text-sm text-gray-600 dark:text-gray-400">
 
-                            <!-- PHONE NUMBER: Now a clickable link to WhatsApp -->
-                            <a href="https://wa.me/27632881025?text=Hello%20Handsome,%20I%20saw%20your%20interactive%20portfolio%20and%20I'm%20interested%20in%20discussing%20a%20mobile%20development%20opportunity."
-                               target="_blank"
-                               class="flex items-center gap-1 hover:text-amber-500 transition-colors cursor-pointer">
-                                <!-- Phone Icon -->
+                            <a href="https://wa.me/27632881025" target="_blank"
+                               class="flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-500 transition-colors cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                     class="w-4 h-4 text-amber-500">
+                                     class="w-4 h-4 text-amber-600 dark:text-amber-500">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                                 </svg>
                                 0632881025 (WhatsApp)
                             </a>
 
-                            <!-- EMAIL: Now a clickable mailto link -->
-                            <a href="mailto:handsomem23@hotmail.com?subject=Inquiry%20from%20Your%20Interactive%20Portfolio&body=Dear%20Handsome,%0A%0AI%20am%20reaching%20out%20to%20you%20regarding%20a%20potential%20opportunity%20or%20collaboration%20after%20viewing%20your%20interactive%20portfolio.%0A%0A[Your%20Message%20Here]%0A%0ABest%20regards,"
-                               target="_blank"
-                               class="flex items-center gap-1 hover:text-amber-500 transition-colors cursor-pointer">
-                                <!-- Mail Icon -->
+                            <a href="mailto:handsomem23@hotmail.com" target="_blank"
+                               class="flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-500 transition-colors cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                     class="w-4 h-4 text-amber-500">
+                                     class="w-4 h-4 text-amber-600 dark:text-amber-500">
                                     <rect width="20" height="16" x="2" y="4" rx="2"/>
                                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                                 </svg>
@@ -278,18 +323,17 @@
                             </a>
 
                             <span class="flex items-center gap-1">
-                            <!-- Location Icon -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                 class="w-4 h-4 text-amber-500"><path
-                                    d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle
-                                    cx="12" cy="10" r="3"/></svg>
-                            Johannesburg, Gauteng
-                        </span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                     class="w-4 h-4 text-amber-600 dark:text-amber-500"><path
+                                        d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle
+                                        cx="12" cy="10" r="3"/></svg>
+                                Johannesburg, Gauteng
+                            </span>
+
                             <a href="https://www.linkedin.com/in/handsome-mofokeng" target="_blank"
-                               class="text-amber-500 hover:text-amber-400 font-semibold underline decoration-2 underline-offset-2 flex items-center gap-1">
-                                <!-- Link Icon -->
+                               class="text-amber-600 dark:text-amber-500 hover:text-amber-500 dark:hover:text-amber-400 font-semibold underline decoration-2 underline-offset-2 flex items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -303,36 +347,34 @@
                     </div>
                 </div>
             </div>
-            <!-- The summary grid was removed from here -->
         </div>
     </header>
 
     <!-- Quantitative Summary & Download Action Row -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 w-full">
-
-        <!-- Quick quantitative summary (Left/Center alignment) -->
-        <!-- ADDED summary-print-row CLASS HERE for specific print styling -->
+        <!-- Summary Stats -->
         <div class="grid grid-cols-3 gap-2 text-center w-full md:w-auto summary-print-row">
-            <div class="bg-gray-700 p-3 rounded-xl border border-gray-600">
-                <div class="text-xl font-bold text-white">5+</div>
-                <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Years Exp
+            <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm">
+                <div class="text-xl font-bold text-gray-900 dark:text-white">5+</div>
+                <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold">
+                    Years Exp
                 </div>
             </div>
-            <div class="bg-gray-700 p-3 rounded-xl border border-gray-600">
-                <div class="text-xl font-bold text-white">4</div>
-                <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Key
-                    Projects
+            <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm">
+                <div class="text-xl font-bold text-gray-900 dark:text-white">4</div>
+                <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold">
+                    Key Projects
                 </div>
             </div>
-            <div class="bg-gray-700 p-3 rounded-xl border border-gray-600">
-                <div class="text-xl font-bold text-white">100%</div>
-                <div class="text-xs uppercase tracking-wide text-gray-400 font-semibold">Mobile
-                    Focus
+            <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm">
+                <div class="text-xl font-bold text-gray-900 dark:text-white">100%</div>
+                <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold">
+                    Mobile Focus
                 </div>
             </div>
         </div>
 
-        <!-- Download Button (Right alignment) -->
+        <!-- Download Button -->
         <div class="no-print self-end md:self-auto w-full md:w-auto flex justify-end">
             <button onclick="window.print()"
                     class="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-md">
@@ -347,18 +389,18 @@
     </div>
 
     <!-- Navigation / Tabs -->
-    <nav class="flex flex-wrap gap-6 border-b border-gray-700 mb-8 sticky top-0 bg-gray-900/95 backdrop-blur z-10 py-2 no-print">
+    <nav class="flex flex-wrap gap-6 border-b border-gray-200 dark:border-gray-700 mb-8 sticky top-0 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur z-10 py-2 no-print">
         <button onclick="switchTab('dashboard')" id="tab-dashboard"
-                class="pb-2 text-gray-300 hover:text-white font-medium transition-colors active-tab">
+                class="pb-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors active-tab">
             Dashboard Analysis
         </button>
         <button onclick="switchTab('experience')" id="tab-experience"
-                class="pb-2 text-gray-300 hover:text-white font-medium transition-colors">Experience
-            Timeline
+                class="pb-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
+            Experience Timeline
         </button>
         <button onclick="switchTab('projects')" id="tab-projects"
-                class="pb-2 text-gray-300 hover:text-white font-medium transition-colors">Project
-            Matrix
+                class="pb-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
+            Project Matrix
         </button>
     </nav>
 
@@ -366,44 +408,45 @@
     <section id="view-dashboard" class="space-y-8 animate-fade-in">
 
         <!-- 1. Professional Profile Block -->
-        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-            <h2 class="text-2xl font-bold text-white mb-4">Professional Profile</h2>
-            <p class="text-gray-300 leading-relaxed mb-4">
-                I am a responsible <strong class="text-amber-500">Mobile Development
-                specialist</strong>, determined to succeed by being persistent and committed to
-                achieving personal and career goals. I am highly collaborative and thrive in
-                organized, challenging environments.
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Professional
+                Profile</h2>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                I am a responsible <strong class="text-amber-600 dark:text-amber-500">Mobile
+                Development specialist</strong>, determined to succeed by being persistent and
+                committed to achieving personal and career goals. I am highly collaborative and
+                thrive in organized, challenging environments.
             </p>
-            <p class="text-gray-300 leading-relaxed">
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                 Coding is my true passion; every day presents new challenges, and I relish applying
                 logic to solve them. I manage the full Software Development Lifecycle (SDLC) using
-                <strong class="text-amber-500">Kotlin, Jetpack Compose</strong>, and robust <strong
-                    class="text-amber-500">MVVM/TDD</strong> practices, ensuring high-quality,
-                high-performance mobile applications from conceptualization to deployment.
+                <strong class="text-amber-600 dark:text-amber-500">Kotlin, Jetpack Compose</strong>,
+                and robust <strong class="text-amber-600 dark:text-amber-500">MVVM/TDD</strong>
+                practices, ensuring high-quality, high-performance mobile applications from
+                conceptualization to deployment.
             </p>
             <div class="mt-6 flex flex-wrap gap-2">
-                <span class="px-3 py-1 bg-amber-800/50 text-amber-300 rounded-full text-sm font-medium">Kotlin Specialist</span>
-                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">Jetpack Compose</span>
-                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">Test Driven Development</span>
-                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm font-medium">C# / Backend Exposure</span>
+                <span class="px-3 py-1 bg-amber-100 dark:bg-amber-800/50 text-amber-800 dark:text-amber-300 rounded-full text-sm font-medium">Kotlin Specialist</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium">Jetpack Compose</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium">Test Driven Development</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium">C# / Backend Exposure</span>
             </div>
         </div>
 
-        <!-- 2. Technical Skills Table (Interactive) -->
-        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+        <!-- 2. Technical Skills Table -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-white">Technical Arsenal</h2>
-                <p class="text-sm text-gray-400 hidden md:block">Hover over categories for
-                    details</p>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Technical Arsenal</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 hidden md:block">Hover over
+                    categories for details</p>
             </div>
 
-            <!-- ADDED arsenal-print-grid CLASS -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 arsenal-print-grid">
                 <!-- Card 1 -->
-                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
-                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">Android
-                        Core</h3>
-                    <ul class="text-sm text-gray-300 space-y-1">
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 transition-colors group cursor-default">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-500">
+                        Android Core</h3>
+                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                         <li>➤ Kotlin (Primary)</li>
                         <li>➤ Jetpack Compose</li>
                         <li>➤ Android SDK & Tools</li>
@@ -411,22 +454,21 @@
                     </ul>
                 </div>
                 <!-- Card 2 -->
-                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
-                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">Quality
-                        & DevOps</h3>
-                    <ul class="text-sm text-gray-300 space-y-1">
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 transition-colors group cursor-default">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-500">
+                        Quality & DevOps</h3>
+                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                         <li>➤ Unit Testing & TDD</li>
                         <li>➤ Git Version Control</li>
                         <li>➤ Gitlab CI/CD & Deployments</li>
                         <li>➤ Debugging & Coding Standards</li>
-
                     </ul>
                 </div>
                 <!-- Card 3 -->
-                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
-                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 transition-colors group cursor-default">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-500">
                         Languages</h3>
-                    <ul class="text-sm text-gray-300 space-y-1">
+                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                         <li>➤ Kotlin & Java</li>
                         <li>➤ Dart (Flutter)</li>
                         <li>➤ C# / XML (Exposure)</li>
@@ -434,10 +476,10 @@
                     </ul>
                 </div>
                 <!-- Card 4 -->
-                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
-                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500">
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 transition-colors group cursor-default">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-500">
                         Methodology</h3>
-                    <ul class="text-sm text-gray-300 space-y-1">
+                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                         <li>➤ Agile & Scrum (SDLC)</li>
                         <li>➤ Technical Solutions Design</li>
                         <li>➤ Problem-solving</li>
@@ -447,25 +489,23 @@
             </div>
         </div>
 
-        <!-- 3. Radar Charts (Skills and Psychometric) - NOW A 2-COLUMN GRID, ADDED charts-print-row CLASS -->
-        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+        <!-- 3. Radar Charts -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 charts-print-row">
-
-                <!-- 3a. Technical Skills Radar Chart (Left) -->
                 <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-white mb-2">Technical Skills Radar</h2>
-                    <p class="text-sm text-gray-400">Core mobile stack proficiency scores, now
-                        including backend exposure.</p>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Technical
+                        Skills Radar</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Core mobile stack
+                        proficiency scores.</p>
                     <div class="chart-container">
                         <canvas id="skillsRadarChart"></canvas>
                     </div>
                 </div>
-
-                <!-- 3b. Existing: Psychometric Competency Radar Chart (Right) -->
                 <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-white mb-2">Psychometric Competency
-                        Profile</h2>
-                    <p class="text-sm text-gray-400">Based on Snaphunt assessment data.</p>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Psychometric
+                        Competency Profile</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Based on Snaphunt assessment
+                        data.</p>
                     <div class="chart-container">
                         <canvas id="psychometricRadar"></canvas>
                     </div>
@@ -474,64 +514,52 @@
         </div>
 
         <!-- 4. Qualitative Behavioral Traits -->
-        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-            <h2 class="text-2xl font-bold text-white mb-6">Qualitative Behavioral Traits</h2>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Qualitative Behavioral
+                Traits</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-                <!-- Thinking: Analysing | Exploring (Innovative) -->
-                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
-                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500 flex items-center gap-2">
-                        <span class="text-amber-500">💡</span> Innovative Thinker
+                <!-- Innovative -->
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 transition-colors cursor-default group">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-500 flex items-center gap-2">
+                        <span class="text-amber-600 dark:text-amber-500">💡</span> Innovative Thinker
                     </h3>
-                    <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
-                        <li>Curious and explores new ideas and approaches (Exploring).</li>
-                        <li>Thinks out of the box and considers a wide range of alternatives.</li>
-                        <li>Comfortable dealing with numerical data to support hypotheses
-                            (Analysing).
-                        </li>
+                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 list-disc pl-5">
+                        <li>Curious and explores new ideas (Exploring).</li>
+                        <li>Thinks out of the box.</li>
+                        <li>Comfortable dealing with numerical data (Analysing).</li>
                     </ul>
                 </div>
-
-                <!-- Executing: Quality | Result Driven (Achiever) -->
-                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
-                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500 flex items-center gap-2">
-                        <span class="text-amber-500">🎯</span> Driven Achiever
+                <!-- Achiever -->
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 transition-colors cursor-default group">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-500 flex items-center gap-2">
+                        <span class="text-amber-600 dark:text-amber-500">🎯</span> Driven Achiever
                     </h3>
-                    <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
-                        <li>Systematic, methodical, and disciplined in delivery (Quality).</li>
-                        <li>Reliable and driven to achieve goals within deadlines (Result Driven).
-                        </li>
-                        <li>Pays attention to details, ensuring a high standard of work.</li>
+                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 list-disc pl-5">
+                        <li>Systematic and disciplined (Quality).</li>
+                        <li>Reliable and goal-driven (Result Driven).</li>
+                        <li>Pays attention to details.</li>
                     </ul>
                 </div>
-
-                <!-- Progressing: Resilience | Adaptability (Tenacious) -->
-                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
-                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500 flex items-center gap-2">
-                        <span class="text-amber-500">🛡️</span> Resilient & Adaptable
-                    </h3>
-                    <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
-                        <li>Recovers quickly from setbacks from setbacks; views failures as learning
-                            opportunities (Resilience).
-                        </li>
-                        <li>Good team player, paying attention to everyone's input.</li>
-                        <li><em class="text-gray-400">Prefers stable environments and may be
-                            uncomfortable with unplanned changes.</em></li>
+                <!-- Resilient -->
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 transition-colors cursor-default group">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-500 flex items-center gap-2">
+                        <span class="text-amber-600 dark:text-amber-500">🛡️</span> Resilient</h3>
+                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 list-disc pl-5">
+                        <li>Recovers quickly from setbacks (Resilience).</li>
+                        <li>Good team player.</li>
+                        <li><em class="text-gray-500 dark:text-gray-400">Prefers stable
+                            environments.</em></li>
                     </ul>
                 </div>
-
-                <!-- Connecting: Networking | Collaborating -->
-                <div class="p-4 bg-gray-700 rounded-xl border border-gray-700 hover:border-amber-500 transition-colors group cursor-default">
-                    <h3 class="font-bold text-lg text-white mb-2 group-hover:text-amber-500 flex items-center gap-2">
-                        <span class="text-amber-500">🤝</span> Collaborator
-                    </h3>
-                    <ul class="text-sm text-gray-300 space-y-1 list-disc pl-5">
-                        <li>Displays empathy towards colleagues and finds it important to listen to
-                            their points of view (Collaborating).
-                        </li>
-                        <li>Delegates easily and gives credit where it is due.</li>
-                        <li><em class="text-gray-400">Prefers to work independently over leading
-                            teams.</em></li>
+                <!-- Collaborator -->
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 transition-colors cursor-default group">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-500 flex items-center gap-2">
+                        <span class="text-amber-600 dark:text-amber-500">🤝</span> Collaborator</h3>
+                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 list-disc pl-5">
+                        <li>Displays empathy (Collaborating).</li>
+                        <li>Delegates easily.</li>
+                        <li><em class="text-gray-500 dark:text-gray-400">Prefers independence over
+                            leading.</em></li>
                     </ul>
                 </div>
             </div>
@@ -540,99 +568,94 @@
 
     <!-- EXPERIENCE TAB -->
     <section id="view-experience" class="hidden space-y-8 animate-fade-in">
-        <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-            <h2 class="text-2xl font-bold text-white mb-4">Career Timeline</h2>
-            <p class="text-gray-300 mb-8 max-w-3xl">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Career Timeline</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-8 max-w-3xl">
                 A chronological view of my professional journey. Click on any role to expand and
-                view detailed responsibilities and key achievements.
-                This timeline demonstrates a consistent trajectory of increasing responsibility and
-                technical complexity.
+                view detailed responsibilities.
             </p>
-
-            <div class="relative pl-8 border-l-2 border-gray-700 space-y-10"
+            <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 space-y-10"
                  id="timeline-container">
-                <!-- Timeline items injected via JS --></div>
+                <!-- Injected via JS -->
+            </div>
         </div>
     </section>
 
     <!-- PROJECTS TAB -->
     <section id="view-projects" class="hidden space-y-8 animate-fade-in">
         <div class="grid grid-cols-1 lg:col-span-3 lg:grid-cols-3 gap-8">
-            <!-- Projects Controls & Viz -->
             <div class="lg:col-span-1 space-y-6">
-                <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
-                    <h3 class="text-lg font-bold text-white mb-4">Tech Stack Analysis</h3>
-                    <p class="text-xs text-gray-400 mb-2">Breakdown of primary technologies used
-                        across key projects.</p>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Tech Stack
+                        Analysis</h3>
                     <div class="chart-container" style="height: 250px;">
                         <canvas id="projectDoughnut"></canvas>
                     </div>
                 </div>
-
-                <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 sticky top-24 no-print">
-                    <h3 class="text-lg font-bold text-white mb-4">Filter Projects</h3>
-                    <div class="space-y-2" id="project-filters">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 sticky top-24 no-print">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Filter
+                        Projects</h3>
+                    <!-- Project Filter Buttons - Now uses flexbox for horizontal layout on small/medium screens -->
+                    <div class="flex flex-wrap gap-2" id="project-filters">
                         <button onclick="filterProjects('all')"
-                                class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium bg-amber-500 text-gray-900 transition-all hover:opacity-90 filter-btn"
-                                data-filter="all">
-                            Show All
+                                class="flex-grow text-center px-4 py-2 rounded-lg text-sm font-medium bg-amber-600 text-white hover:opacity-90 filter-btn"
+                                data-filter="all">Show All
                         </button>
                         <button onclick="filterProjects('Kotlin')"
-                                class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium bg-gray-700 text-gray-100 hover:bg-gray-600 transition-all filter-btn"
-                                data-filter="Kotlin">
-                            Kotlin & Compose
+                                class="flex-grow text-center px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 filter-btn"
+                                data-filter="Kotlin">Kotlin & Compose
                         </button>
                         <button onclick="filterProjects('Java')"
-                                class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium bg-gray-700 text-gray-100 hover:bg-gray-600 transition-all filter-btn"
-                                data-filter="Java">
-                            Java Native
+                                class="flex-grow text-center px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 filter-btn"
+                                data-filter="Java">Java Native
                         </button>
                         <button onclick="filterProjects('Flutter')"
-                                class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium bg-gray-700 text-gray-100 hover:bg-gray-600 transition-all filter-btn"
-                                data-filter="Flutter">
-                            Flutter / Dart
+                                class="flex-grow text-center px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 filter-btn"
+                                data-filter="Flutter">Flutter / Dart
                         </button>
                     </div>
                 </div>
             </div>
-
-            <!-- Projects Grid -->
             <div class="lg:col-span-2">
-                <div class="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-white">Key Projects Showcase</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Key Projects
+                            Showcase</h2>
                         <span id="project-count"
-                              class="text-sm font-medium text-gray-400 bg-gray-700 px-3 py-1 rounded-full">4 Items</span>
+                              class="text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">4 Items</span>
                     </div>
                     <div class="grid grid-cols-1 gap-6" id="projects-grid">
-                        <!-- Projects Injected via JS --></div>
+                        <!-- Injected via JS -->
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Education Footer -->
-    <section class="mt-12 pt-8 border-t border-gray-700">
-        <h2 class="text-2xl font-bold text-white mb-6">Education History</h2>
+    <section class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Education History</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
-                <div class="text-amber-500 text-2xl mb-2">🎓</div>
-                <h3 class="font-bold text-white">N. Diploma IT</h3>
-                <p class="text-sm text-gray-300">Software Development</p>
-                <p class="text-xs text-gray-500 mt-2">Central University of Technology |
-                    2015-2018</p>
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+                <div class="text-amber-600 dark:text-amber-500 text-2xl mb-2">🎓</div>
+                <h3 class="font-bold text-gray-900 dark:text-white">N. Diploma IT</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300">Software Development</p>
+                <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">Central University of
+                    Technology | 2015-2018</p>
             </div>
-            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
-                <div class="text-amber-500 text-2xl mb-2">🎓</div>
-                <h3 class="font-bold text-white">BSc IT</h3>
-                <p class="text-sm text-gray-300">Bridging Program</p>
-                <p class="text-xs text-gray-500 mt-2">University of Free State | 2013-2014</p>
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+                <div class="text-amber-600 dark:text-amber-500 text-2xl mb-2">🎓</div>
+                <h3 class="font-bold text-gray-900 dark:text-white">BSc IT</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300">Bridging Program</p>
+                <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">University of Free State |
+                    2013-2014</p>
             </div>
-            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
-                <div class="text-amber-500 text-2xl mb-2">🏫</div>
-                <h3 class="font-bold text-white">National Senior Certificate</h3>
-                <p class="text-sm text-gray-300">Matric</p>
-                <p class="text-xs text-gray-500 mt-2">Mampoi High School | 2009-2011</p>
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+                <div class="text-amber-600 dark:text-amber-500 text-2xl mb-2">🏫</div>
+                <h3 class="font-bold text-gray-900 dark:text-white">National Senior Certificate</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300">Matric</p>
+                <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">Mampoi High School |
+                    2009-2011</p>
             </div>
         </div>
     </section>
@@ -645,130 +668,69 @@
 
 <!-- JAVASCRIPT LOGIC -->
 <script>
-    // --- DATA STORE ---
+    // --- DATA ---
     const experienceData = [
         {
-            role: "Mobile Developer",
-            company: "Standard Bank",
-            dept: "Finance",
-            period: "2022/08 - Present",
-            active: true,
+            role: "Mobile Developer", company: "Standard Bank", dept: "Finance", period: "2022/08 - Present",
             responsibilities: [
-                "Develop mobile applications, using a variety of programming languages, from design documents, stories and acceptance criteria.",
-                "Design the user interface (UI) and user experience (UX) that are both user-friendly and visually appealing.",
-                "Test and debug the apps thoroughly to ensure they are working properly and free of errors (TDD principles).",
-                "Monitored, identified, and corrected software defects to maintain fully functioning mobile applications.",
-                "Manage CI/CD pipelines (Gitlab) for internal testing and deployment to production via Google Play Console.",
-                "Proactively communicate and update business stakeholders on workload capacity, demand on time, and timelines."
+                "Develop mobile applications using Kotlin and Jetpack Compose.",
+                "Design UI/UX that is user-friendly and visually appealing.",
+                "Test and debug apps (TDD principles).",
+                "Manage CI/CD pipelines (Gitlab) and Google Play Console deployments."
             ]
         },
         {
-            role: "Mobile Developer",
-            company: "Acumen Software",
-            dept: "IT & Telecommunications",
-            period: "2021/06 - 2022/07",
-            active: false,
+            role: "Mobile Developer", company: "Acumen Software", dept: "IT & Telecommunications", period: "2021/06 - 2022/07",
             responsibilities: [
-                "Contributed to development of existing and new customer-facing applications by analysing and identifying areas for modification and improvement.",
-                "Worked without supervision and provided technical guidance when required on developing software.",
-                "Analysed requirements and created quotations for new functionality.",
-                "Managed version control (Gitlab) and frequently built app releases for internal testing and deployment to production.",
-                "Monitored, identified, and corrected straightforward software defects to maintain fully functioning applications software."
+                "Contributed to customer-facing apps and analyzed areas for improvement.",
+                "Analysed requirements and created quotations.",
+                "Managed version control and built app releases."
             ]
         },
         {
-            role: "Developer",
-            company: "Dimension Data",
-            dept: "IT & Telecommunications",
-            period: "2019/02 - 2021/05",
-            active: false,
+            role: "Developer", company: "Dimension Data", dept: "IT & Telecommunications", period: "2019/02 - 2021/05",
             responsibilities: [
-                "Contributed to development of existing and new applications by analysing and identifying areas for modification and improvement.",
-                "Provided technical guidance and worked without supervision on software development tasks.",
-                "Assisted with IT Support, monitoring, diagnosing and fixing technical problems.",
-                "Managed Services tasks including SharePoint Administration, SharePoint Enhancement, and automating Server Health Checks."
+                "Contributed to development of existing and new applications.",
+                "Assisted with IT Support and fixing technical problems.",
+                "Managed Services tasks including SharePoint Administration."
             ]
         }
     ];
 
     const projectData = [
-        {
-            name: "ComposeWhatsApp UI",
-            stack: ["Kotlin", "Android Native", "Jetpack Compose"],
-            link: "https://github.com/handsomemofokeng/ComposeWhatsApp?tab=readme-ov-file#whatsapp-ui-clone-jetpack-compose",
-            linkText: "Source Code",
-            desc: "A clone of the WhatsApp UI built entirely with Jetpack Compose, demonstrating advanced UI capabilities and modern Android architecture.",
-            category: "Kotlin"
-        },
-        {
-            name: "Standard Bank App",
-            stack: ["Kotlin", "Android Native"],
-            link: "https://play.google.com/store/apps/details?id=com.sbg.mobile.phone",
-            linkText: "App Link",
-            desc: "Enterprise financial application. Contributed to core banking features, UI modernization, stability improvements, and production deployment.",
-            category: "Kotlin"
-        },
-        {
-            name: "MySmart.City App",
-            stack: ["Java Native", "Flutter", "Android", "Play Console"],
-            link: "https://play.google.com/store/apps/details?id=net.acumensoft.mysmartcityapp",
-            linkText: "App Store Link",
-            desc: "A citizen engagement platform allowing users to report issues and interact with city services. Initially developed using Java Native Android, the application was subsequently migrated to Flutter.",
-            category: "Flutter" // Categorizing it under Flutter since migration is the key detail here, but it touches Java.
-        },
-        {
-            name: "SRC Voting App",
-            stack: ["Java Native", "Android"],
-            link: "https://youtu.be/AZi4MgdhaH8", // Updated link to YouTube Demo
-            linkText: "YouTube Demo",
-            desc: "A secure voting application designed for Student Representative Council elections, developed using Java Native Android.",
-            category: "Java"
-        }
+        { name: "ComposeWhatsApp UI", stack: ["Kotlin", "Compose"], link: "https://github.com/handsomemofokeng/ComposeWhatsApp?tab=readme-ov-file#whatsapp-ui-clone-jetpack-compose", linkText: "Source Code", desc: "A clone of the WhatsApp UI built entirely with Jetpack Compose.", category: "Kotlin" },
+        { name: "Standard Bank App", stack: ["Kotlin", "Android"], link: "https://play.google.com/store/apps/details?id=com.sbg.mobile.phone", linkText: "App Link", desc: "Enterprise financial application. Contributed to core banking features.", category: "Kotlin" },
+        { name: "MySmart.City App", stack: ["Java", "Flutter", "Android"], link: "https://play.google.com/store/apps/details?id=net.acumensoft.mysmartcityapp", linkText: "App Store Link", desc: "Citizen engagement platform migrated from Java Native Android to Flutter.", category: "Flutter" },
+        { name: "SRC Voting App", stack: ["Java", "Android"], link: "https://youtu.be/AZi4MgdhaH8", linkText: "YouTube Demo", desc: "A secure voting application designed for Student Representative Council elections.", category: "Java" }
     ];
 
-    // --- SKILLS DATA (UPDATED) ---
-    const skillsData = {
-        // Added Sharepoint, C#, and SQL
-        labels: ["Java", "Kotlin", "Jetpack Compose", "Flutter", "Sharepoint", "C#", "SQL"],
-        // Added corresponding data points: 80, 90, 95, 75, 75, 70, 60
-        data: [80, 90, 95, 75, 75, 70, 60]
-    };
+    const skillsData = { labels: ["Java", "Kotlin", "Compose", "Flutter", "Sharepoint", "C#", "SQL"], data: [80, 90, 95, 75, 75, 70, 60] };
+    const psychometricData = { labels: ["Analysing", "Exploring", "Networking", "Collaborating", "Quality", "Results", "Leadership", "Resilience", "Adaptability"], data: [70, 75, 40, 60, 95, 90, 20, 95, 45] };
 
-    // --- PSYCHOMETRIC DATA (EXISTING) ---
-    const psychometricData = {
-        labels: ["Analysing", "Exploring", "Networking", "Collaborating", "Quality", "Results Driven", "Leadership", "Resilience", "Adaptability"],
-        // Data points (0-100 scale, estimated from radar chart shape)
-        data: [70, 75, 40, 60, 95, 90, 20, 95, 45]
-    };
+    // --- CHART INSTANCES ---
+    let charts = {};
 
-    // --- RENDER FUNCTIONS (omitted for brevity, assume they are still there) ---
+    // --- RENDER FUNCTIONS ---
     function renderTimeline() {
         const container = document.getElementById('timeline-container');
         container.innerHTML = experienceData.map((job, index) => `
             <div class="relative group cursor-pointer" onclick="toggleJob(${index})">
-                <div class="absolute -left-[41px] h-5 w-5 rounded-full border-4 border-gray-900 ${index === 0 ? 'bg-amber-500' : 'bg-gray-500'} shadow-md"></div>
-                <div class="bg-gray-800 hover:bg-gray-700 p-5 rounded-xl border border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-amber-500/50">
+                <div class="absolute -left-[41px] h-5 w-5 rounded-full border-4 border-gray-100 dark:border-gray-900 ${index === 0 ? 'bg-amber-500' : 'bg-gray-400'} shadow-md"></div>
+                <div class="bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-5 rounded-xl border border-gray-200 dark:border-gray-600 transition-all duration-300 hover:shadow-xl hover:border-amber-500/50">
                     <div class="flex justify-between items-start flex-wrap gap-2">
                         <div>
-                            <h3 class="text-lg font-bold text-white">${job.role}</h3>
-                            <div class="text-amber-500 font-medium">${job.company} <span class="text-gray-500 text-sm font-normal">| ${job.dept}</span></div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">${job.role}</h3>
+                            <div class="text-amber-600 dark:text-amber-500 font-medium">${job.company} <span class="text-gray-500 text-sm font-normal">| ${job.dept}</span></div>
                         </div>
-                        <span class="text-xs font-semibold px-2 py-1 rounded bg-gray-700 text-gray-300">${job.period}</span>
+                        <span class="text-xs font-semibold px-2 py-1 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">${job.period}</span>
                     </div>
-                    <div id="job-details-${index}" class="${index === 0 ? 'block' : 'hidden'} mt-4 pt-4 border-t border-gray-700">
+                    <div id="job-details-${index}" class="${index === 0 ? 'block' : 'hidden'} mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
                         <ul class="list-none space-y-2">
-                            ${job.responsibilities.map(r => `
-                                <li class="flex items-start text-sm text-gray-300">
-                                    <span class="text-amber-500 mr-2 mt-1">➤</span>
-                                    <span>${r}</span>
-                                </li>
-                            `).join('')}
+                            ${job.responsibilities.map(r => `<li class="flex items-start text-sm text-gray-600 dark:text-gray-300"><span class="text-amber-500 mr-2 mt-1">➤</span><span>${r}</span></li>`).join('')}
                         </ul>
                     </div>
                     <div class="mt-2 text-center">
-                        <span class="text-xs text-gray-500 group-hover:text-amber-500 transition-colors" id="job-hint-${index}">
-                            ${index === 0 ? 'Click to collapse' : 'Click to expand details'}
-                        </span>
+                        <span class="text-xs text-gray-500 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors" id="job-hint-${index}">${index === 0 ? 'Click to collapse' : 'Click to expand details'}</span>
                     </div>
                 </div>
             </div>
@@ -779,53 +741,53 @@
         const details = document.getElementById(`job-details-${index}`);
         const hint = document.getElementById(`job-hint-${index}`);
         if (details.classList.contains('hidden')) {
-            details.classList.remove('hidden');
-            details.classList.add('block');
+            details.classList.remove('hidden'); details.classList.add('block');
             hint.textContent = 'Click to collapse';
         } else {
-            details.classList.add('hidden');
-            details.classList.remove('block');
+            details.classList.add('hidden'); details.classList.remove('block');
             hint.textContent = 'Click to expand details';
         }
     }
 
-    function renderProjects(filter = 'all') {
+    /**
+     * Filters the project data based on the selected category and renders the grid.
+     */
+    function filterProjects(filter = 'all') {
         const container = document.getElementById('projects-grid');
-        const countLabel = document.getElementById('project-count');
 
-        const filtered = filter === 'all'
-            ? projectData
-            : projectData.filter(p => p.category.includes(filter));
+        // Determine filtered data
+        const filtered = filter === 'all' ? projectData : projectData.filter(p => p.category.includes(filter));
 
-        countLabel.textContent = `${filtered.length} Items`;
+        // Update project count
+        document.getElementById('project-count').textContent = filtered.length + " Items";
 
+        // Update button active state
         document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterProjects(btn.dataset.filter);
-            });
+            if (btn.dataset.filter === filter) {
+                btn.className = "flex-grow text-center px-4 py-2 rounded-lg text-sm font-medium bg-amber-600 text-white shadow-md filter-btn";
+            } else {
+                btn.className = "flex-grow text-center px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all filter-btn";
+            }
         });
 
+        // Render projects
         container.innerHTML = filtered.map(p => {
-            let categoryClasses = 'bg-gray-600 text-gray-200'; // Default
-            if (p.category === 'Kotlin') {
-                categoryClasses = 'bg-amber-800/50 text-amber-300';
-            } else if (p.category === 'Flutter') {
-                categoryClasses = 'bg-sky-800/50 text-sky-300'; // Sky-Blue for Flutter
-            } else if (p.category === 'Java') {
-                categoryClasses = 'bg-purple-800/50 text-purple-300'; // Purple for Java
-            }
+            let badgeClass = 'bg-gray-200 text-gray-700 dark:bg-gray-600 dark:text-gray-200';
+            if (p.category === 'Kotlin') badgeClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
+            if (p.category === 'Flutter') badgeClass = 'bg-blue-100 text-blue-800 dark:bg-sky-900/50 dark:text-sky-300';
+            if (p.category === 'Java') badgeClass = 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300';
 
             return `
-                <div class="group bg-gray-700 rounded-xl border border-gray-700 p-5 hover:shadow-xl hover:border-amber-500 transition-all">
+                <div class="group bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 p-5 hover:shadow-xl hover:border-amber-500 transition-all">
                     <div class="flex justify-between items-start mb-3">
-                        <h3 class="font-bold text-lg text-white">${p.name}</h3>
-                        <span class="text-xs font-mono px-2 py-1 rounded ${categoryClasses}">${p.category}</span>
+                        <h3 class="font-bold text-lg text-gray-900 dark:text-white">${p.name}</h3>
+                        <span class="text-xs font-mono px-2 py-1 rounded ${badgeClass}">${p.category}</span>
                     </div>
-                    <p class="text-sm text-gray-300 mb-4 h-12 overflow-hidden">${p.desc}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 h-12 overflow-hidden">${p.desc}</p>
                     <div class="flex flex-wrap gap-2 mb-4">
-                        ${p.stack.map(s => `<span class="text-xs bg-gray-800 border border-gray-600 text-gray-400 px-2 py-1 rounded">${s}</span>`).join('')}
+                        ${p.stack.map(s => `<span class="text-xs bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-500 text-gray-500 dark:text-gray-400 px-2 py-1 rounded">${s}</span>`).join('')}
                     </div>
-                    <a href="${p.link}" target="_blank" class="inline-flex items-center text-sm font-medium text-amber-500 hover:text-amber-400">
+                    <a href="${p.link}" target="_blank" class="inline-flex items-center text-sm font-medium text-amber-600 dark:text-amber-500 hover:text-amber-500">
                         ${p.linkText} <span class="ml-1">→</span>
                     </a>
                 </div>
@@ -833,197 +795,127 @@
         }).join('');
     }
 
-    // --- NAVIGATION LOGIC (omitted for brevity, assume they are still there) ---
     function switchTab(tabName) {
-        // Hide all views
         ['dashboard', 'experience', 'projects'].forEach(t => {
             document.getElementById(`view-${t}`).classList.add('hidden');
-            document.getElementById(`tab-${t}`).classList.remove('active-tab', 'text-white');
-            document.getElementById(`tab-${t}`).classList.add('text-gray-300');
+            document.getElementById(`tab-${t}`).classList.remove('active-tab');
+            document.getElementById(`tab-${t}`).classList.add('text-gray-600', 'dark:text-gray-300');
         });
-
-        // Show selected
         document.getElementById(`view-${tabName}`).classList.remove('hidden');
-        const activeBtn = document.getElementById(`tab-${tabName}`);
-        activeBtn.classList.add('active-tab', 'text-white');
-        activeBtn.classList.remove('text-gray-300');
+        document.getElementById(`tab-${tabName}`).classList.add('active-tab');
+        document.getElementById(`tab-${tabName}`).classList.remove('text-gray-600', 'dark:text-gray-300');
 
-        // Trigger window resize to fix Chart.js responsive sizing if invisible on load
-        window.dispatchEvent(new Event('resize'));
+        if (tabName === 'dashboard' || tabName === 'projects') initCharts();
     }
 
-    function filterProjects(category) {
-        renderProjects(category);
-        // Update button styles
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            if(btn.dataset.filter === category) {
-                btn.classList.remove('bg-gray-700', 'text-gray-100', 'hover:bg-gray-600');
-                btn.classList.add('bg-amber-500', 'text-gray-900', 'hover:opacity-90');
-            } else {
-                btn.classList.add('bg-gray-700', 'text-gray-100', 'hover:bg-gray-600');
-                btn.classList.remove('bg-amber-500', 'text-gray-900', 'hover:opacity-90');
-            }
-        });
+    // --- THEME LOGIC ---
+    function toggleDarkMode() {
+        const html = document.documentElement;
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+        updateIcons();
+        initCharts(); // Redraw charts with correct colors
     }
 
-    // --- INITIALIZATION ---
-    function initializeCharts() {
-        // Shared Gold/Amber Colors
-        const goldFillColor = 'rgba(245, 158, 11, 0.2)'; // Amber-500 low opacity
-        const goldBorderColor = 'rgb(245, 158, 11)';   // Amber-500
+    function updateIcons() {
+        const isDark = document.documentElement.classList.contains('dark');
+        document.getElementById('sun-icon').classList.toggle('hidden', !isDark); // Show sun in dark mode
+        document.getElementById('moon-icon').classList.toggle('hidden', isDark); // Show moon in light mode
+    }
 
-        // Light Blue Colors (as requested)
-        const blueFillColor = 'rgba(59, 130, 246, 0.2)'; // Blue-500 low opacity
-        const blueBorderColor = 'rgb(59, 130, 246)';   // Blue-500
+    // --- CHARTS ---
+    function initCharts() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const gridColor = isDark ? '#374151' : '#e5e7eb';
+        const labelColor = isDark ? '#d1d5db' : '#4b5563';
+        const backdropColor = isDark ? '#1f2937' : '#ffffff';
 
-        const gridColor = '#374151'; // Gray-700
-        const pointLabelColor = '#d1d5db'; // Gray-300
-        const pointBorderColor = '#1f2937'; // Gray-800
+        // Destroy existing
+        if (charts.skills) charts.skills.destroy();
+        if (charts.psycho) charts.psycho.destroy();
+        if (charts.doughnut) charts.doughnut.destroy();
 
-        // Function to create a standard radar chart configuration
-        const getRadarConfig = (labels, data, label, fillColor, borderColor) => ({
+        const radarConfig = (data, label, color) => ({
             type: 'radar',
             data: {
-                labels: labels,
+                labels: data.labels,
                 datasets: [{
                     label: label,
-                    data: data,
+                    data: data.data,
                     fill: true,
-                    backgroundColor: fillColor, // Use dynamic color
-                    borderColor: borderColor,   // Use dynamic color
-                    pointBackgroundColor: borderColor,
-                    pointBorderColor: pointBorderColor,
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: borderColor
+                    backgroundColor: color.bg,
+                    borderColor: color.border,
+                    pointBackgroundColor: color.border,
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                elements: { line: { tension: 0.3 } },
                 scales: {
                     r: {
                         angleLines: { color: gridColor },
                         grid: { color: gridColor },
-                        pointLabels: {
-                            font: { size: 12, family: 'sans-serif' },
-                            color: pointLabelColor
-                        },
-                        ticks: {
-                            display: false,
-                            max: 100,
-                            min: 0,
-                            beginAtZero: true
-                        }
+                        pointLabels: { color: labelColor, font: { size: 12 } },
+                        ticks: { display: false, backdropColor: 'transparent' }
                     }
                 },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                // Append % sign only if it's the skills chart
-                                if (context.chart.canvas.id === 'skillsRadarChart' && context.parsed.r !== null) {
-                                    label += context.parsed.r + '%';
-                                } else if (context.parsed.r !== null) {
-                                    label += context.parsed.r;
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                }
+                plugins: { legend: { display: false } }
             }
         });
 
+        const ctxSkills = document.getElementById('skillsRadarChart');
+        if (ctxSkills) {
+            charts.skills = new Chart(ctxSkills, radarConfig(skillsData, 'Skills', {
+                bg: 'rgba(245, 158, 11, 0.2)', border: 'rgb(245, 158, 11)'
+            }));
+        }
 
-        // 1. TECHNICAL SKILLS RADAR CHART (AMBER)
-        const ctxSkills = document.getElementById('skillsRadarChart').getContext('2d');
-        new Chart(ctxSkills, getRadarConfig(
-            skillsData.labels,
-            skillsData.data,
-            'Proficiency Score',
-            goldFillColor,
-            goldBorderColor
-        ));
+        const ctxPsycho = document.getElementById('psychometricRadar');
+        if (ctxPsycho) {
+            charts.psycho = new Chart(ctxPsycho, radarConfig(psychometricData, 'Traits', {
+                bg: 'rgba(59, 130, 246, 0.2)', border: 'rgb(59, 130, 246)'
+            }));
+        }
 
-        // 2. PSYCHOMETRIC RADAR CHART (UPDATED TO BLUE)
-        const ctxPsychometric = document.getElementById('psychometricRadar').getContext('2d');
-        new Chart(ctxPsychometric, getRadarConfig(
-            psychometricData.labels,
-            psychometricData.data,
-            'Psychometric Score',
-            blueFillColor,   // Light blue fill
-            blueBorderColor  // Blue border
-        ));
-
-        // 3. DOUGHNUT CHART: Project Stack
-        const stackCounts = projectData.reduce((acc, p) => {
-            acc[p.category] = (acc[p.category] || 0) + 1;
-            return acc;
-        }, {});
-
-        const labels = Object.keys(stackCounts);
-        const dataValues = Object.values(stackCounts);
-
-        const ctxDoughnut = document.getElementById('projectDoughnut').getContext('2d');
-        new Chart(ctxDoughnut, {
-            type: 'doughnut',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Project Count by Primary Stack',
-                    data: dataValues,
-                    backgroundColor: [
-                        'rgb(245, 158, 11)', // Amber-500 (Kotlin)
-                        'rgb(14, 165, 233)', // Sky-500 (Flutter)
-                        'rgb(168, 85, 247)'  // Purple-500 (Java)
-                    ],
-                    hoverOffset: 8,
-                    borderWidth: 2,
-                    borderColor: '#1f2937' // Gray-800 (for contrast)
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '75%', // Thinner doughnut
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: {
-                            color: '#d1d5db', // Gray-300
-                            font: { family: 'Inter, sans-serif' }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed !== null) {
-                                    label += context.parsed + ' projects';
-                                }
-                                return label;
-                            }
-                        }
-                    }
+        const ctxDoughnut = document.getElementById('projectDoughnut');
+        if (ctxDoughnut) {
+            charts.doughnut = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Kotlin', 'Flutter', 'Java'],
+                    datasets: [{
+                        data: [2, 1, 1],
+                        backgroundColor: ['#f59e0b', '#0ea5e9', '#a855f7'],
+                        borderColor: backdropColor,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { color: labelColor } } }
                 }
-            }
-        });
+            });
+        }
     }
 
-    // --- INITIALIZATION ---
+    // --- INIT ---
     window.onload = function() {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+        updateIcons();
         renderTimeline();
-        renderProjects('all');
-        initializeCharts();
+        filterProjects('all'); // Corrected function call for initial load
+        initCharts();
     };
 </script>
 </body>
