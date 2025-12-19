@@ -188,7 +188,7 @@
                         <!-- Contact Details -->
                         <div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 justify-center md:justify-start text-sm text-gray-600 dark:text-gray-400">
 
-                            <a href="https://wa.me/27632881025" target="_blank"
+                            <a id="whatsapp-link" href="#"
                                class="flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-500 transition-colors cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -199,7 +199,7 @@
                                 0632881025 (WhatsApp)
                             </a>
 
-                            <a href="mailto:handsomem23@hotmail.com" target="_blank"
+                            <a id="email-link" href="#"
                                class="flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-500 transition-colors cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -625,21 +625,31 @@
     const skillsData = { labels: ["Java", "Kotlin", "Compose", "Flutter", "Sharepoint", "C#", "SQL"], data: [80, 90, 95, 75, 75, 70, 60] };
     const psychometricData = { labels: ["Analysing", "Exploring", "Networking", "Collaborating", "Quality", "Results", "Leadership", "Resilience", "Adaptability"], data: [70, 75, 40, 60, 95, 90, 20, 95, 45] };
 
+    // --- CONTACT MESSAGING LOGIC ---
+    function setupContactLinks() {
+        const name = "Handsome Mofokeng";
+        const phone = "27632881025";
+        const email = "handsomem23@hotmail.com";
+
+        // Professional WhatsApp Message
+        const whatsappMsg = `Hello ${name},\n\nI viewed your interactive portfolio and was impressed by your experience with Kotlin and Jetpack Compose. I would like to discuss a potential opportunity with you.\n\nBest regards.`;
+        document.getElementById('whatsapp-link').href = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMsg)}`;
+
+        // Professional Email Message
+        const emailSubject = `Inquiry regarding Mobile Development Opportunity - ${name}`;
+        const emailBody = `Dear ${name},\n\nI hope this email finds you well.\n\nI recently explored your interactive portfolio and am interested in your technical background as a Mobile Developer specialist. I would like to schedule a time to discuss how your skills in Android development might align with our current needs.\n\nPlease let me know your availability for a brief call.\n\nBest regards,`;
+        document.getElementById('email-link').href = `mailto:${email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    }
+
     // --- CHART INSTANCES ---
     let charts = {};
 
     // --- RENDER FUNCTIONS ---
-    /**
-     * Renders the career timeline with the new marker style and click logic.
-     */
     function renderTimeline() {
         const container = document.getElementById('timeline-container');
         container.innerHTML = experienceData.map((job, index) => `
             <div class="relative group timeline-item">
-                <!-- Timeline Marker (CSS defined) -->
                 <div class="timeline-marker"></div>
-
-                <!-- Timeline Card - Clickable Area -->
                 <div class="bg-gray-50 dark:bg-gray-700 p-5 rounded-xl border border-gray-200 dark:border-gray-600 transition-all duration-300 hover:shadow-xl hover:border-amber-500/50 cursor-pointer" onclick="toggleJob(${index})">
                     <div class="flex justify-between items-start flex-wrap gap-2">
                         <div>
@@ -648,15 +658,11 @@
                         </div>
                         <span class="text-xs font-semibold px-2 py-1 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">${job.period}</span>
                     </div>
-
-                    <!-- Details Container -->
                     <div id="job-details-${index}" class="${index === 0 ? 'block' : 'hidden'} mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
                         <ul class="list-disc space-y-2 ml-5">
                             ${job.responsibilities.map(r => `<li class="text-sm text-gray-600 dark:text-gray-300">${r}</li>`).join('')}
                         </ul>
                     </div>
-
-                    <!-- Toggle Hint -->
                     <div class="mt-2 text-center">
                         <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors" id="job-hint-${index}">
                             ${index === 0 ? 'Click to collapse' : 'Click to expand details'}
@@ -667,9 +673,6 @@
         `).join('');
     }
 
-    /**
-     * Toggles the visibility of job details and updates the hint text.
-     */
     function toggleJob(index) {
         const details = document.getElementById(`job-details-${index}`);
         const hint = document.getElementById(`job-hint-${index}`);
@@ -685,19 +688,11 @@
         }
     }
 
-    /**
-     * Filters the project data based on the selected category and renders the grid.
-     */
     function filterProjects(filter = 'all') {
         const container = document.getElementById('projects-grid');
-
-        // Determine filtered data
         const filtered = filter === 'all' ? projectData : projectData.filter(p => p.category.includes(filter));
-
-        // Update project count
         document.getElementById('project-count').textContent = filtered.length + " Items";
 
-        // Update button active state
         document.querySelectorAll('.filter-btn').forEach(btn => {
             if (btn.dataset.filter === filter) {
                 btn.className = "flex-grow text-center px-4 py-2 rounded-lg text-sm font-medium bg-amber-600 text-white shadow-md filter-btn";
@@ -706,7 +701,6 @@
             }
         });
 
-        // Render projects
         container.innerHTML = filtered.map(p => {
             let badgeClass = 'bg-gray-200 text-gray-700 dark:bg-gray-600 dark:text-gray-200';
             if (p.category === 'Kotlin') badgeClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
@@ -741,36 +735,31 @@
         document.getElementById(`tab-${tabName}`).classList.add('active-tab');
         document.getElementById(`tab-${tabName}`).classList.remove('text-gray-600', 'dark:text-gray-300');
 
-        // Reinitialize charts when switching to dashboard or projects tab
         if (tabName === 'dashboard' || tabName === 'projects') initCharts();
     }
 
-    // --- THEME LOGIC ---
     function toggleDarkMode() {
         const html = document.documentElement;
         const isDark = html.classList.toggle('dark');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         updateIcons(isDark);
-        initCharts(); // Redraw charts with correct colors
+        initCharts();
     }
 
     function updateIcons(isDark) {
-        // Use the current state of the DOM if no argument is passed (for initial load)
         if (typeof isDark === 'undefined') {
             isDark = document.documentElement.classList.contains('dark');
         }
-        document.getElementById('sun-icon').classList.toggle('hidden', !isDark); // Show sun in dark mode
-        document.getElementById('moon-icon').classList.toggle('hidden', isDark); // Show moon in light mode
+        document.getElementById('sun-icon').classList.toggle('hidden', !isDark);
+        document.getElementById('moon-icon').classList.toggle('hidden', isDark);
     }
 
-    // --- CHARTS (IMPROVED SCALE) ---
     function initCharts() {
         const isDark = document.documentElement.classList.contains('dark');
         const gridColor = isDark ? 'rgba(80, 80, 80, 0.5)' : 'rgba(200, 200, 200, 0.8)';
         const labelColor = isDark ? '#d1d5db' : '#4b5563';
         const backdropColor = isDark ? '#1f2937' : '#ffffff';
 
-        // Destroy existing chart instances to prevent "Canvas is already in use" errors
         if (charts.skills) charts.skills.destroy();
         if (charts.psycho) charts.psycho.destroy();
         if (charts.doughnut) charts.doughnut.destroy();
@@ -796,7 +785,6 @@
                 maintainAspectRatio: false,
                 scales: {
                     r: {
-                        // Display 0-100 scale clearly
                         suggestedMin: 0,
                         suggestedMax: 100,
                         angleLines: { color: gridColor },
@@ -804,9 +792,9 @@
                         pointLabels: { color: labelColor, font: { size: 14, weight: 'bold' } },
                         ticks: {
                             display: true,
-                            stepSize: 25, // Show ticks at 25, 50, 75, 100
+                            stepSize: 25,
                             color: labelColor,
-                            backdropColor: backdropColor, // Match chart background for readability
+                            backdropColor: backdropColor,
                             showLabelBackdrop: true,
                             font: { size: 10 }
                         }
@@ -854,8 +842,8 @@
 
     // --- INIT ---
     window.onload = function() {
-        // Initial setup
-        updateIcons(); // Update icons based on immediate dark mode setting
+        updateIcons();
+        setupContactLinks();
         renderTimeline();
         filterProjects('all');
         initCharts();
